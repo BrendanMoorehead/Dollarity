@@ -1,10 +1,9 @@
+import './App.css'; 
 import NewAccountForm from "./Components/NewAccountForm";
+import PageLayout from './Components/PageLayout';
 function App() {
   return (
-    <div className="App">
-      <p>Hello World</p>
-      <NewAccountForm/>
-    </div>
+     <PageLayout />
   );
 }
 
