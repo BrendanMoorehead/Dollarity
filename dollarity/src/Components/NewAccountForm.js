@@ -1,33 +1,58 @@
 import React from 'react'
-import { Button, Checkbox, Form, Input, ColorPicker } from 'antd';
+import { Button, Checkbox, Form, Input, ColorPicker, Segmented, InputNumber, Steps, Flex, Row, Col, ConfigProvider } from 'antd';
+import { useState } from 'react';
 /**
  * A form for the user to enter all account details.
  * 
  * @returns A form that takes all the data needed to create a new monetary account. 
  */
 const NewAccountForm = () => {
-    const newAccountSubmit = () => {
-        console.log("Submission");
-    }
+
+
   return (
-   <Form
-    name="newAccount"
-    onFinish={newAccountSubmit}
-   >
-    <Form.Item
-        label="Account Name"
-        name="accountName"
-    >
-        <Input/>
-    </Form.Item>
-
-    <Form.Item
-        label="Account Color"
-        name="accountColor"
-    >
-        <ColorPicker defaultValue="#1677ff" />
-    </Form.Item>
-
+   <Form>
+      <h2>New Account</h2>
+      <Form.Item>
+          <h4>Type</h4>
+          <ConfigProvider
+  theme={{
+    components: {
+      Segmented: {
+        itemSelectedBg: '#99ffe0'
+      },
+    },
+  }}
+>
+          <Segmented
+            block
+            options={["Spending", "Credit", "Debt"]}
+            onChange={(value) => {
+              console.log(value); // string
+            }}
+          /></ConfigProvider>
+      </Form.Item>
+      <Form.Item>
+        <h4>Name</h4>
+        <Input />
+      </Form.Item>
+      <Form.Item>
+        <h4>Current Balance</h4>
+        <InputNumber
+        formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+        step="0.01"
+        />
+      </Form.Item>
+      <Row justify="space-evenly"> 
+        <Col span={12}>
+        <Button type="primary" block>
+            Create Account
+        </Button></Col>
+        <Col span={6}>
+        <Button type="primary" danger ghost block>
+          Clear
+        </Button>
+        </Col>
+      </Row>
    </Form>
   )
 }
