@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Checkbox, Form, Input, ColorPicker, Segmented, InputNumber, Steps, Flex, Row, Col, ConfigProvider } from 'antd';
 import { useState } from 'react';
+import DollarInput from './DollarInput';
 /**
  * A form for the user to enter all account details.
  * 
@@ -37,10 +38,7 @@ const NewAccountForm = () => {
       </Form.Item>
       <Form.Item>
         <h4>Current Balance</h4>
-        <InputNumber
-        formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-        step="0.01"
-        />
+        <DollarInput />
       </Form.Item>
       <Row justify="space-evenly"> 
         <Col span={12}>
