@@ -3,15 +3,18 @@ import { useState } from 'react';
 import { debounce } from 'lodash';
 
 const DollarInput = ({onChange}) => {
-    const [value, setValue] = useState(0);
+    const [value, setValue] = useState(0.00);
 
     //Remove non-numeric values and format to two decimal places.
     const handleInputChange = debounce((newValue) => {
-        const numericValue = newValue.toString().replace(/[^0-9.-]/g, '');
-        const formattedValue = parseFloat(numericValue).toFixed(2);
-        setValue(formattedValue);
+        if (newValue === null) setValue(0);
+        else{
+            const numericValue = newValue.toString().replace(/[^0-9.-]/g, '');
+            const formattedValue = parseFloat(numericValue).toFixed(2);
+            setValue(formattedValue);
+        }
         //Call the onChange callback with the new value.
-        onChange && onChange(numericValue);
+        onChange && onChange(value);
     }, 100);
 
     //Update value on change.

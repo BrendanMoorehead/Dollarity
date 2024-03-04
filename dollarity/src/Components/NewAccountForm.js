@@ -9,47 +9,38 @@ import NameInput from './NameInput';
  * @returns A form that takes all the data needed to create a new monetary account. 
  */
 const NewAccountForm = () => {
+  const [accountName, setAccountName] = useState("");
+  const [accountBalance, setAccountBalance] = useState(0.00);
+  const [accountType, setAccountType] = useState('Spending');
 
+
+  const changeAccountType = (value) => setAccountType(value);
+  const changeAccountBalance = (value) => setAccountBalance(value);
+  const changeAccountName = (value) => setAccountName(value);
 
   return (
    <Form>
       <h2>New Account</h2>
-      <Form.Item>
-          <h4>Type</h4>
-          <ConfigProvider
-  theme={{
-    components: {
-      Segmented: {
-        itemSelectedBg: '#99ffe0'
-      },
-    },
-  }}
->
+      <Form.Item label={<span style={{ fontWeight: 'bold' }}>Type</span>} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
           <Segmented
+            size='large'
             block
             options={["Spending", "Credit", "Debt"]}
             onChange={(value) => {
-              console.log(value); // string
+              changeAccountType(value) // string
             }}
-          /></ConfigProvider>
-      </Form.Item>
+            style={{userSelect: 'none'}}
+            value={accountType}
+          />
+
         <h4>Name</h4>
-        <NameInput />
-      <Form.Item>
+        <NameInput onchange={changeAccountName}/>
         <h4>Current Balance</h4>
-        <DollarInput />
+        <DollarInput onChange={changeAccountBalance} />
       </Form.Item>
-      <Row justify="space-evenly"> 
-        <Col span={12}>
-        <Button type="primary" block>
+        <Button type="primary" size="large" block>
             Create Account
-        </Button></Col>
-        <Col span={6}>
-        <Button type="primary" danger ghost block>
-          Clear
         </Button>
-        </Col>
-      </Row>
    </Form>
   )
 }
