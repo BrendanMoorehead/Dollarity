@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Checkbox, Form, Input, ColorPicker, Segmented, InputNumber, Steps, Flex, Row, Col, ConfigProvider } from 'antd';
 import { useState } from 'react';
 import DollarInput from './DollarInput';
+import NameInput from './NameInput';
 /**
  * A form for the user to enter all account details.
  * 
@@ -32,10 +33,8 @@ const NewAccountForm = () => {
             }}
           /></ConfigProvider>
       </Form.Item>
-      <Form.Item>
         <h4>Name</h4>
-        <Input />
-      </Form.Item>
+        <NameInput />
       <Form.Item>
         <h4>Current Balance</h4>
         <DollarInput />
