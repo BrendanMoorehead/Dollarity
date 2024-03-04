@@ -2,14 +2,16 @@ import { Input } from "antd";
 import { useState } from 'react';
 import { debounce } from 'lodash';
 
-const DollarInput = () => {
-    const [value, setValue] = useState('0.00');
+const DollarInput = ({onChange}) => {
+    const [value, setValue] = useState(0);
 
     //Remove non-numeric values and format to two decimal places.
     const handleInputChange = debounce((newValue) => {
         const numericValue = newValue.toString().replace(/[^0-9.-]/g, '');
         const formattedValue = parseFloat(numericValue).toFixed(2);
         setValue(formattedValue);
+        //Call the onChange callback with the new value.
+        onChange && onChange(numericValue);
     }, 100);
 
     //Update value on change.
