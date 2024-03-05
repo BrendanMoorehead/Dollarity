@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { Form, Input, Button } from 'antd';
 import { supabase } from '../supabaseClient';
+import { signUpWithEmail } from '../utils/auth';
 const LoginForm = () => {
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
@@ -8,16 +9,8 @@ const LoginForm = () => {
 
     const handleSignup = async () => {
         try {
-          const { user, error } = await supabase.auth.signUp({
-            email,
-            password,
-          });
-    
-          if (error) {
-            throw error;
-          }
-    
-          console.log('Signup successful:', user);
+          const signUp = signUpWithEmail(email,password);
+          console.log('Signup successful:', signUp);
           // Redirect the user to another page, or handle the success in some other way
         } catch (error) {
           console.error('Error signing up:', error.message);
@@ -27,7 +20,6 @@ const LoginForm = () => {
 
   return (
     <Form style={{backgroundColor:"white", borderRadius: 10, padding: 20, margin: 20}} 
-        onSubmit={handleSignup}
         >
         <Form.Item 
         label="Username"
@@ -59,7 +51,7 @@ const LoginForm = () => {
         span: 16,
       }}
     >
-      <Button type="primary" htmlType="submit">
+      <Button type="primary" onClick={handleSignup}>
         Submit
       </Button>
     </Form.Item>
