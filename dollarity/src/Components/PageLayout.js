@@ -4,6 +4,7 @@ import {LayoutFilled, AreaChartOutlined, SwapOutlined, WalletFilled} from '@ant-
 import NewTransactionFloatButton from './NewTransactionFloatButton';
 import NewAccountForm from './NewAccountForm';
 import NewAccountDrawer from './NewAccountDrawer';
+import LoginScreen from './LoginScreen';
 const { Header, Content, Footer, Sider } = Layout;
 
 
@@ -29,8 +30,7 @@ const PageLayout = () => {
       <Sider style={styles.sider} width={160}>
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
       </Sider>
-      <Content><NewAccountForm/></Content>
-      <NewTransactionFloatButton />
+      <LoginScreen />
       <NewAccountDrawer />
     </Layout>
   )
