@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { Form, Input, Button } from 'antd';
 import { supabase } from '../supabaseClient';
-import { signUpWithEmail } from '../utils/auth';
+import { getCurrentUser, signUpWithEmail } from '../utils/auth';
 const LoginForm = () => {
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
