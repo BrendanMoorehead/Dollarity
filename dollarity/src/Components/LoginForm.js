@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { Form, Input, Button } from 'antd';
 import { supabase } from '../supabaseClient';
-import { getCurrentUser, signUpWithEmail } from '../utils/auth';
+import { getCurrentUser, signInWithEmail, userAuth } from '../utils/auth';
 const LoginForm = () => {
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
@@ -9,7 +9,7 @@ const LoginForm = () => {
 
     const handleSignup = async () => {
         try {
-          const signUp = signUpWithEmail(email,password);
+          const signUp = signInWithEmail(email,password);
           console.log('Signup successful:', signUp);
           // Redirect the user to another page, or handle the success in some other way
         } catch (error) {
