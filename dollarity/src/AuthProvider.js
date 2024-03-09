@@ -1,8 +1,9 @@
 import { Session, User } from '@supabase/supabase-js'
-import { createContext, useEffect } from "react"
+import { createContext, useEffect, useState } from "react"
 import { supabase } from './supabaseClient';
+import { signInWithEmail, signOutUser } from './utils/auth';
 //Make a new context for authentication.
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null);
@@ -18,6 +19,8 @@ const AuthProvider = ({children}) => {
             setSession(session);
             //Sets the user state to the user object, if the session exists.
             setUser(session?.user);
+            console.log("Active session: ", session);
+            console.log("User object (UseEffect):", session?.user);
             setLoading(false);
         }
 
@@ -27,6 +30,8 @@ const AuthProvider = ({children}) => {
         const {data: listener} = supabase.auth.onAuthStateChange((_event, session) => {
             //Updates to new session.
             setSession(session);
+            console.log("Event session: ", session);
+            console.log("User object: (AuthChangeListener)", session?.user);
             setUser(session?.user);
             setLoading(false);
         });
@@ -38,8 +43,26 @@ const AuthProvider = ({children}) => {
             listener?.subscription.unsubscribe();
         }
     }, []);
+
+    const logout = async () => {
+        console.log("AuthProvider logout called.");
+        await signOutUser();
+    }
+
+    const login = async (email, password) => {
+        try{
+            const data = await signInWithEmail(email, password);
+            return data;
+        } catch (error) {
+            throw new Error('Error logging in: ' + error.message);
+        }
+        
+    }
+
   return (
-    
+    <AuthContext.Provider value={{user, login, logout, session, loading}}> 
+        {children}
+    </AuthContext.Provider>
   )
 }
 

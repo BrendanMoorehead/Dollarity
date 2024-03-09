@@ -1,5 +1,5 @@
 import { supabase } from "../supabaseClient"
-
+import { Modal } from "antd";
 
 export const userAuth = async (email, password) => {
     try {
@@ -46,8 +46,14 @@ export const signInWithEmail = async (email, password) => {
         });
         if (error) {
             console.error("Error signing in: " + error.message);
+            if (error.message === 'Email not confirmed'){
+                Modal.info({
+                    title: 'User Not Verified',
+                    content: `A verification email has been sent to ${email}`,
+                });
+            }
             // If the error indicates that the user does not exist, attempt sign-up
-            if (error.code === 'USER_NOT_VERIFIED') {
+            else if (error.message === 'Invalid login credentials') {
                 console.log("User not found, attempting sign-up...");
                 return signUpWithEmail(email, password);
             }
