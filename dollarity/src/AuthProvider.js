@@ -1,11 +1,14 @@
-import { Session, User } from '@supabase/supabase-js'
 import { createContext, useEffect, useState } from "react"
 import { supabase } from './supabaseClient';
 import { signInWithEmail, signOutUser } from './utils/auth';
+import { useNavigate } from 'react-router-dom';
 //Make a new context for authentication.
 export const AuthContext = createContext();
 
 const AuthProvider = ({children}) => {
+    
+    const navigate = useNavigate();
+
     const [user, setUser] = useState(null);
     const [session, setSession] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -52,12 +55,12 @@ const AuthProvider = ({children}) => {
     const login = async (email, password) => {
         try{
             const data = await signInWithEmail(email, password);
+            navigate('/dashboard');
             return data;
         } catch (error) {
             throw new Error('Error logging in: ' + error.message);
         }
-        
-    }
+    }   
 
   return (
     <AuthContext.Provider value={{user, login, logout, session, loading}}> 

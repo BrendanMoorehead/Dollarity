@@ -1,4 +1,4 @@
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate, Redirect } from 'react-router-dom';
 import { Button, Layout, Menu } from 'antd';
 import LoginScreen from './Components/LoginScreen';
 import Dashboard from './Components/Pages/Dashboard';
@@ -24,13 +24,14 @@ const PrivateRoute = ({children, ...rest }) => {
 
 const Views = () => {
 
-  const { login, logout, user } = useContext(AuthContext);
+  const { login, logout, user, loading } = useContext(AuthContext);
 
 
   const handleLogout = () => {
     console.log("Signing out");
     logout();
   };
+
 
   return (
     
@@ -53,7 +54,8 @@ const Views = () => {
       </Header>
       <Content>
       <Routes>
-          <Route path='/' element={<LoginScreen />} />
+
+          <Route path='' element={<LoginScreen />} />
           <Route path='/dashboard' element={<PrivateRoute> <Dashboard /> </PrivateRoute>} />
           {/* Nonexistent Routes */}
           <Route path="*" element={<div>404 not found</div>} />
