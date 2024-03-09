@@ -1,9 +1,10 @@
 import { Route, Routes, Navigate, Redirect } from 'react-router-dom';
-import { Button, Layout, Menu } from 'antd';
+import { Button, Layout, Menu, Popconfirm, message} from 'antd';
 import LoginScreen from './Components/LoginScreen';
 import Dashboard from './Components/Pages/Dashboard';
 import { useContext } from 'react';
 import { AuthContext } from './AuthProvider';
+import { useState } from 'react';
 
 const items = new Array(15).fill(null).map((_, index) => ({
   key: index + 1,
@@ -23,15 +24,20 @@ const PrivateRoute = ({children, ...rest }) => {
 };
 
 const Views = () => {
-
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const { login, logout, user, loading } = useContext(AuthContext);
 
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    setConfirmLoading(true);
     console.log("Signing out");
-    logout();
+    await logout();
+    setConfirmLoading(false);
   };
 
+  const cancel = (e) => {
+    console.log("Logout cancelled");
+  };
 
   return (
     
@@ -50,7 +56,22 @@ const Views = () => {
             minWidth: 0,
           }}
         />
-        <Button onClick={handleLogout}>Logout</Button>
+        {user ? ( 
+          <Popconfirm
+          placement='bottomRight'
+          title="Logout"
+          description="Are you sure to sign out?"
+          onConfirm={handleLogout}
+          onCancel={cancel}
+          okText="Yes"
+          cancelText="No"
+          okButtonProps={{
+            loading: confirmLoading,
+          }}
+          >
+          <Button>Logout</Button>
+          </Popconfirm>
+          ) : (<></>)}
       </Header>
       <Content>
       <Routes>
