@@ -11,7 +11,9 @@ const items = new Array(15).fill(null).map((_, index) => ({
   label: `nav ${index + 1}`,
 }));
 
-const { Header, Content } = Layout;
+const { Header, Content, Sider } = Layout;
+
+const item = {sub1: 'value', 2: 'test'};
 
 const PrivateRoute = ({children, ...rest }) => {
   const { user, loading } = useContext(AuthContext);
@@ -73,6 +75,19 @@ const Views = () => {
           </Popconfirm>
           ) : (<></>)}
       </Header>
+      
+      <Layout>
+      {user ? (
+        <Sider width={200}>
+          <Menu
+            mode="inline"
+            defaultSelectedKeys={['1']}
+            defaultOpenKeys={['sub1']}
+            style={{ height: '100%', borderRight: 0 }}
+            items={items}
+          />
+        </Sider>) : (<></>)}
+        <Layout>
       <Content>
       <Routes>
 
@@ -82,6 +97,8 @@ const Views = () => {
           <Route path="*" element={<div>404 not found</div>} />
       </Routes>
       </Content>
+      </Layout>
+      </Layout>
       </Layout>
   )
 }

@@ -23,23 +23,7 @@ const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, i
 const Dashboard = () => {
   return (
     <div>
-      <Sider
-          width={200}
-          style={{
-            background: "#ffffff",
-          }}
-        >
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            style={{
-              height: '100%',
-              borderRight: 0,
-            }}
-            items={items2}
-          />
-        </Sider>
+      dashboard
     </div>
   )
 }
