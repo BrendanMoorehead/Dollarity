@@ -1,7 +1,32 @@
 import React from 'react'
 import { Form, Input, InputNumber, Segmented, Select, DatePicker } from 'antd';
+import { useEffect, useState } from 'react';
 import DollarInput from './DollarInput';
+import { fetchAccounts } from '../accountFunctions';
 const NewTransactionForm = () => {
+
+    const [accounts, setAccounts] = useState([]);
+    
+    useEffect(() => {
+
+        const getData = async () => {
+            const data = await fetchAccounts();
+            setAccounts(data);
+
+            setAccounts(data.reduce((acc, item) => {
+                if (!acc[item.type]) {
+                  acc[item.type] = [];
+                }
+                acc[item.type].push(item);
+                return acc;
+              }, {}));
+        };
+
+        getData();
+    }, []);
+
+
+    
 
     const selectChange = () => {
 
@@ -30,36 +55,15 @@ const NewTransactionForm = () => {
             width: 200,
             }}
             onChange={selectChange}
-            options={[
-            {
-                label: <span>Entertainment</span>,
-                title: 'entertainment',
-                options: [
-                {
-                    label: <span>Hobby</span>,
-                    value: 'hobby',
-                },
-                {
-                    label: <span>Subscription</span>,
-                    value: 'subscription',
-                },
-                ],
-            },
-            {
-                label: <span>Food & drinks</span>,
-                title: 'food & drinks',
-                options: [
-                {
-                    label: <span>Groceries</span>,
-                    value: 'groceries',
-                },
-                {
-                    label: <span>Eating out</span>,
-                    value: 'eating out',
-                },
-                ],
-            },
-            ]}
+            options={Object.keys(accounts).map(type => ({
+                label: <span>{type}</span>,
+                title: type.toLowerCase(),
+                options: accounts[type].map(item => ({
+                label: <span>{item.name}</span>,
+                value: item.id.toString()
+                }))
+            }))
+        }
         />
         </Form.Item>
         <Form.Item>
@@ -70,36 +74,15 @@ const NewTransactionForm = () => {
             width: 200,
             }}
             onChange={selectChange}
-            options={[
-            {
-                label: <span>Spending</span>,
-                title: 'spending',
-                options: [
-                {
-                    label: <span>TD Checking Account</span>,
-                    value: 'tdcheckingaccount'
-                },
-                {
-                    label: <span>TD Cashback Credit Card</span>,
-                    value: 'tdcashbackcreditcard',
-                },
-                ],
-            },
-            {
-                label: <span>Saving</span>,
-                title: 'saving',
-                options: [
-                {
-                    label: <span>TD Everyday Savings</span>,
-                    value: 'tdeverydaysavings',
-                },
-                {
-                    label: <span>Emergency Fund</span>,
-                    value: 'emergencyfund',
-                },
-                ],
-            },
-            ]}
+            options={Object.keys(accounts).map(type => ({
+                label: <span>{type}</span>,
+                title: type.toLowerCase(),
+                options: accounts[type].map(item => ({
+                label: <span>{item.name}</span>,
+                value: item.id.toString()
+                }))
+            }))
+        }
         />
         </Form.Item>
         <Form.Item >

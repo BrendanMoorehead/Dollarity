@@ -23,6 +23,13 @@ const NewAccountForm = () => {
   const changeAccountBalance = (value) => setAccountBalance(value);
   const changeAccountName = (value) => setAccountName(value);
 
+  const waitForOneSecond = () => {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(); // Resolve the promise after one second
+      }, 1000); // 1000 milliseconds = 1 second
+    });
+  };
 
   const formSubmit = async () => {
     setFormSubmitLoading(true);
