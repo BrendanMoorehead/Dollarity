@@ -3,20 +3,40 @@ import { Button, Checkbox, Form, Input, ColorPicker, Segmented, InputNumber, Ste
 import { useState } from 'react';
 import DollarInput from './DollarInput';
 import NameInput from './NameInput';
+import { createAccount, fetchAccounts } from '../accountFunctions';
+import { useContext } from 'react';
+import { AuthContext } from './../AuthProvider';
+import { debounce } from 'lodash';
 /**
  * A form for the user to enter all account details.
  * 
  * @returns A form that takes all the data needed to create a new monetary account. 
  */
 const NewAccountForm = () => {
+  const { user, loading } = useContext(AuthContext);
   const [accountName, setAccountName] = useState("");
   const [accountBalance, setAccountBalance] = useState(0.00);
   const [accountType, setAccountType] = useState('Spending');
-
+  const [formSubmitLoading, setFormSubmitLoading] = useState(false);
 
   const changeAccountType = (value) => setAccountType(value);
   const changeAccountBalance = (value) => setAccountBalance(value);
   const changeAccountName = (value) => setAccountName(value);
+
+
+  const formSubmit = async () => {
+    setFormSubmitLoading(true);
+    try {
+      const data = await createAccount(accountType, accountName, accountBalance, user.id);
+    } catch (error) {
+      console.log(error);
+    }
+    setFormSubmitLoading(false);
+  }
+
+  const getAccounts = async () => {
+    fetchAccounts();
+  }
 
   return (
    <Form>
@@ -34,12 +54,15 @@ const NewAccountForm = () => {
           />
 
         <h4>Name</h4>
-        <NameInput onchange={changeAccountName}/>
+        <NameInput onChange={changeAccountName}/>
         <h4>Current Balance</h4>
         <DollarInput onChange={changeAccountBalance} />
       </Form.Item>
-        <Button type="primary" size="large" block>
+        <Button loading={formSubmitLoading} type="primary" size="large" block onClick={formSubmit}>
             Create Account
+        </Button>
+        <Button type="primary" size="large" block onClick={getAccounts}>
+            Fetch Accounts
         </Button>
    </Form>
   )

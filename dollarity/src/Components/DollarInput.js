@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { debounce } from 'lodash';
 
 const DollarInput = ({onChange}) => {
-    const [value, setValue] = useState(0.00);
+    const [value, setValue] = useState("0.00");
 
     //Remove non-numeric values and format to two decimal places.
     const handleInputChange = debounce((newValue) => {
-        if (newValue === null) setValue(0);
+        if (isNaN(newValue)) setValue(0.00);
         else{
             const numericValue = newValue.toString().replace(/[^0-9.-]/g, '');
             const formattedValue = parseFloat(numericValue).toFixed(2);
@@ -24,11 +24,12 @@ const DollarInput = ({onChange}) => {
 
   return (
     <Input 
-        addonAfter="$" 
+        style={{fontSize: '32px', width: 220, textAlign: 'center'}}
+        formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+        parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
         value={value}
         onChange={handleChange}
         onBlur={handleBlur}
-        size="large"
     />
   )
 }

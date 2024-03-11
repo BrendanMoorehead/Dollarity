@@ -1,6 +1,8 @@
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import React from 'react';
+import NewTransactionForm from '../NewTransactionForm';
+import NewAccountForm from '../NewAccountForm';
 const { Header, Content, Sider } = Layout;
 
 
@@ -23,7 +25,8 @@ const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, i
 const Dashboard = () => {
   return (
     <div>
-      dashboard
+      <NewTransactionForm />
+      <NewAccountForm />
     </div>
   )
 }

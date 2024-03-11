@@ -1,10 +1,11 @@
 import { Route, Routes, Navigate, Redirect } from 'react-router-dom';
-import { Button, Layout, Menu, Popconfirm, message} from 'antd';
+import { Button, Layout, Menu, Popconfirm, message, FloatButton, Tooltip} from 'antd';
 import LoginScreen from './Components/LoginScreen';
 import Dashboard from './Components/Pages/Dashboard';
 import { useContext } from 'react';
 import { AuthContext } from './AuthProvider';
 import { useState } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
 
 const items = new Array(15).fill(null).map((_, index) => ({
   key: index + 1,
@@ -13,7 +14,11 @@ const items = new Array(15).fill(null).map((_, index) => ({
 
 const { Header, Content, Sider } = Layout;
 
-const item = {sub1: 'value', 2: 'test'};
+const item = [
+  {key: 1, label: "Dashboard"}, 
+  {key: 2, label: "Transactions"},
+  {key: 3, label: "Accounts"},  
+];
 
 const PrivateRoute = ({children, ...rest }) => {
   const { user, loading } = useContext(AuthContext);
@@ -52,7 +57,6 @@ const Views = () => {
           theme="dark"
           mode="horizontal"
           defaultSelectedKeys={['2']}
-          items={items}
           style={{
             flex: 1,
             minWidth: 0,
@@ -78,19 +82,21 @@ const Views = () => {
       
       <Layout>
       {user ? (
-        <Sider width={200}>
+        <Sider width={200} height={600}>
           <Menu
             mode="inline"
             defaultSelectedKeys={['1']}
             defaultOpenKeys={['sub1']}
             style={{ height: '100%', borderRight: 0 }}
-            items={items}
+            items={item}
           />
         </Sider>) : (<></>)}
         <Layout>
       <Content>
+      <Tooltip placement="left" title={<span>New transaction</span>}>
+      <FloatButton size='large' icon={<PlusOutlined />} type='primary' onClick={() => console.log('onClick')} />
+      </Tooltip>
       <Routes>
-
           <Route path='' element={<LoginScreen />} />
           <Route path='/dashboard' element={<PrivateRoute> <Dashboard /> </PrivateRoute>} />
           {/* Nonexistent Routes */}
