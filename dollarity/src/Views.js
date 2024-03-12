@@ -4,6 +4,7 @@ import LoginScreen from './Components/LoginScreen';
 import Dashboard from './Components/Pages/Dashboard';
 import { useContext } from 'react';
 import { AuthContext } from './AuthProvider';
+import { DataContext } from './DataProvider';
 import { useState } from 'react';
 import { PlusOutlined, DatabaseFilled, CreditCardFilled } from '@ant-design/icons';
 import NewAccountForm from './Components/NewAccountForm';
@@ -36,7 +37,6 @@ const Views = () => {
   const [newAccountModal, setNewAccountModal] = useState(false);
   const [newTransactionModal, setNewTransactionModal] = useState(false);
   const { login, logout, user, loading } = useContext(AuthContext);
-
 
   const handleLogout = async () => {
     setConfirmLoading(true);

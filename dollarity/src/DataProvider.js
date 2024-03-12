@@ -33,6 +33,7 @@ const DataProvider = ({children}) => {
             .eq('user_id', user.id);
         if (error) throw error;
         setAccounts(data);
+        console.log(data);
         return data;
     }
 
