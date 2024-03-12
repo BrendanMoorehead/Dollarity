@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Checkbox, Form, Input, ColorPicker, Segmented, InputNumber, Steps, Flex, Row, Col, ConfigProvider } from 'antd';
+import { Button, Checkbox, Form, Input, ColorPicker, Segmented, notification } from 'antd';
 import { useState } from 'react';
 import DollarInput from './DollarInput';
 import NameInput from './NameInput';
@@ -12,7 +12,7 @@ import { debounce } from 'lodash';
  * 
  * @returns A form that takes all the data needed to create a new monetary account. 
  */
-const NewAccountForm = () => {
+const NewAccountForm = ({hideNewAccountModal}) => {
   const { user, loading } = useContext(AuthContext);
   const [accountName, setAccountName] = useState("");
   const [accountBalance, setAccountBalance] = useState(0.00);
@@ -39,14 +39,27 @@ const NewAccountForm = () => {
       console.log(error);
     }
     setFormSubmitLoading(false);
+    hideNewAccountModal();
+    openNotification('topRight');
   }
 
   const getAccounts = async () => {
     fetchAccounts();
   }
 
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (placement, ) => {
+    api.success({
+      message: `Account created`,
+      description:
+      `${accountName} has been added to your profile.`,
+      placement,
+    });
+  };
+
   return (
    <Form>
+      {contextHolder}
       <h2>New Account</h2>
       <Form.Item label={<span style={{ fontWeight: 'bold' }}>Type</span>} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
           <Segmented
@@ -67,9 +80,6 @@ const NewAccountForm = () => {
       </Form.Item>
         <Button loading={formSubmitLoading} type="primary" size="large" block onClick={formSubmit}>
             Create Account
-        </Button>
-        <Button type="primary" size="large" block onClick={getAccounts}>
-            Fetch Accounts
         </Button>
    </Form>
   )

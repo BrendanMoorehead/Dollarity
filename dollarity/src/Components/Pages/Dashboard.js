@@ -1,32 +1,25 @@
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Button } from 'antd';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import React from 'react';
 import NewTransactionForm from '../NewTransactionForm';
 import NewAccountForm from '../NewAccountForm';
-const { Header, Content, Sider } = Layout;
+import { useContext } from 'react';
+import { AuthContext } from './../../AuthProvider';
+import { calculateNetWorth } from './../../accountFunctions';
 
-
-const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
-  const key = String(index + 1);
-  return {
-    key: `sub${key}`,
-    icon: React.createElement(icon),
-    label: `subnav ${key}`,
-    children: new Array(4).fill(null).map((_, j) => {
-      const subKey = index * 4 + j + 1;
-      return {
-        key: subKey,
-        label: `option${subKey}`,
-      };
-    }),
-  };
-});
 
 const Dashboard = () => {
+  const { user, loading } = useContext(AuthContext);
+
+  const getNetworth = async () => {
+    const nw = await calculateNetWorth(user.id);
+    console.log(nw);
+  }
+
   return (
     <div>
-      <NewTransactionForm />
-      <NewAccountForm />
+      Dashboard
+      <Button onClick={getNetworth}>Networth</Button>
     </div>
   )
 }

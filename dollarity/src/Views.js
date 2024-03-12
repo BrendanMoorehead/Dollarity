@@ -1,12 +1,13 @@
 import { Route, Routes, Navigate, Redirect } from 'react-router-dom';
-import { Button, Layout, Menu, Popconfirm, message, FloatButton, Tooltip} from 'antd';
+import { Button, Layout, Menu, Popconfirm, message, FloatButton, Tooltip, Modal} from 'antd';
 import LoginScreen from './Components/LoginScreen';
 import Dashboard from './Components/Pages/Dashboard';
 import { useContext } from 'react';
 import { AuthContext } from './AuthProvider';
 import { useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-
+import { PlusOutlined, DatabaseFilled, CreditCardFilled } from '@ant-design/icons';
+import NewAccountForm from './Components/NewAccountForm';
+import NewTransactionForm from './Components/NewTransactionForm';
 const items = new Array(15).fill(null).map((_, index) => ({
   key: index + 1,
   label: `nav ${index + 1}`,
@@ -32,6 +33,8 @@ const PrivateRoute = ({children, ...rest }) => {
 
 const Views = () => {
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [newAccountModal, setNewAccountModal] = useState(false);
+  const [newTransactionModal, setNewTransactionModal] = useState(false);
   const { login, logout, user, loading } = useContext(AuthContext);
 
 
@@ -42,6 +45,22 @@ const Views = () => {
     setConfirmLoading(false);
   };
 
+  const showNewAccountModal = () => {
+    setNewAccountModal(true);
+  }
+  
+  const hideNewAccountModal = () => {
+    setNewAccountModal(false);
+  };
+
+
+  const showNewTransactionModal = () => {
+    setNewTransactionModal(true);
+  }
+  
+  const hideNewTransactionModal = () => {
+    setNewTransactionModal(false);
+  };
   const cancel = (e) => {
     console.log("Logout cancelled");
   };
@@ -93,15 +112,29 @@ const Views = () => {
         </Sider>) : (<></>)}
         <Layout>
       <Content>
-      <Tooltip placement="left" title={<span>New transaction</span>}>
-      <FloatButton size='large' icon={<PlusOutlined />} type='primary' onClick={() => console.log('onClick')} />
-      </Tooltip>
+      <FloatButton.Group>
+        <Tooltip placement="left" title={<span>Add account</span>}>
+        <FloatButton size='large' icon={<CreditCardFilled />} type='primary' onClick={showNewAccountModal} />
+        </Tooltip>
+        <Tooltip placement="left" title={<span>Add transaction</span>}>
+        <FloatButton size='large' icon={<DatabaseFilled />} type='primary' onClick={showNewTransactionModal} />
+        </Tooltip>
+      </FloatButton.Group>
       <Routes>
           <Route path='' element={<LoginScreen />} />
           <Route path='/dashboard' element={<PrivateRoute> <Dashboard /> </PrivateRoute>} />
           {/* Nonexistent Routes */}
           <Route path="*" element={<div>404 not found</div>} />
       </Routes>
+
+      <Modal open={newAccountModal} footer={null} onCancel={hideNewAccountModal}>
+        <NewAccountForm hideNewAccountModal={hideNewAccountModal}/>
+      </Modal>
+
+      <Modal open={newTransactionModal} footer={null} onCancel={hideNewTransactionModal}>
+        <NewTransactionForm hideNewTransactionModal={hideNewTransactionModal}/>
+      </Modal>
+
       </Content>
       </Layout>
       </Layout>
