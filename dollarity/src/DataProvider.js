@@ -178,6 +178,14 @@ const DataProvider = ({children}) => {
         return accountData;
     }
 
+    const deleteAccount = async (accountId) => {
+        const { error } = await supabase
+            .from('accounts')
+            .delete()
+            .eq('id', accountId);
+        if (error) throw new Error(error.message);
+    }
+
     return (
         <DataContext.Provider value={{
             networth, 
@@ -187,7 +195,8 @@ const DataProvider = ({children}) => {
             getTransactions,
             createAccount,
             transfer,
-            addTransaction
+            addTransaction,
+            deleteAccount
             }}>
             {children}
         </DataContext.Provider>

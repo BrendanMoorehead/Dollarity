@@ -1,47 +1,77 @@
 import React from 'react'
 import { MoreOutlined } from '@ant-design/icons'
-import {Dropdown, Divider, Button, Space} from 'antd';
-import { DeleteOutlined, EditOutlined, InfoCircleOutlined } from '@ant-design/icons';
-const items = [
-    {
-        label: 'Info',
-        key: '1',
-        icon: <InfoCircleOutlined />,
-      },
-    {
-      label: 'Edit',
-      key: '2',
-      icon: <EditOutlined />
-    },
-    {
-      label: 'Delete',
-      key: '3',
-      icon: <DeleteOutlined />,
-      danger: true,
-    },
-    
-];
+import {Dropdown, Divider, Button, Space, Menu, Popconfirm} from 'antd';
+import { DeleteOutlined, EditOutlined, InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { useContext } from 'react';
+import { DataContext } from './../DataProvider';
+
 const  AccountCard = ({account}) => {
     const { id, created_at, type, name, balance, user_id } = account;
+    const {deleteAccount, getAccounts} = useContext(DataContext);
     const onClick = (e) => console.log(e);
     if (!account) {
         return <div>No account data available</div>;
     }
+
+
+    const items = [
+        {
+            label: 'Info',
+            key: '1',
+            icon: <InfoCircleOutlined />,
+          },
+        {
+          label: 'Edit',
+          key: '2',
+          icon: <EditOutlined />
+        },
+        {
+          label: 'Delete',
+          key: '3',
+          icon: <DeleteOutlined />,
+          danger: true,
+          onClick: () => handleDeleteClick()
+        },
+        
+    ];
+
+    const handleDeleteClick = async () => {
+        console.log('Delete');
+        await deleteAccount(id);
+        console.log('account delete success');
+        await getAccounts();
+    }
+
   return (
     <div style={styles.card}>
         <Dropdown
-        
-            placement='topRight'
-            menu={{
-            items,
-            }}
+            arrow
+            placement='bottomRight'
             dropdownRender={(menu) => (
                 <div>
-                    {React.cloneElement(menu, {
-                    style: styles.menu,
-                })}
-                </div>
-            )}
+                    <Menu>
+                        <Menu.Item key="1" onClick={(e) => console.log(e)}>
+                            <InfoCircleOutlined /> Info
+                        </Menu.Item>
+                        <Menu.Item key="2" onClick={(e) => console.log(e)}>
+                            <EditOutlined /> Edit
+                        </Menu.Item>
+                        <Menu.Item key="3" danger>
+                            <Popconfirm
+                                placement="bottomRight"
+                                icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                                title="Deleting this account will also remove all related transactions."
+                                onConfirm={() => handleDeleteClick(account)}
+                                okText="Yes"
+                                cancelText="No"
+                            >
+                                <a href="#">
+                                    <DeleteOutlined /> Delete
+                                </a>
+                            </Popconfirm>
+                        </Menu.Item>
+                    </Menu>
+                </div>)}
             ><a style={{justifySelf: 'end'}} onClick={(e) => e.preventDefault()}>
             <MoreOutlined style={{fontSize:'16px', paddingTop: '12px', paddingRight:'4px', justifySelf: 'end'}}/>
             </a>
