@@ -8,7 +8,7 @@ import { DataContext } from './../DataProvider';
 import { createTransaction, fetchAccounts, fetchCategories } from '../accountFunctions';
 const NewTransactionForm = ({hideNewTransactionModal}) => {
     const { user, loading } = useContext(AuthContext);
-    const {transfer} = useContext(DataContext);
+    const {transfer, addTransaction} = useContext(DataContext);
     const [accounts, setAccounts] = useState([]);
     const [categories, setCategories] = useState([]);
 
@@ -54,11 +54,13 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
     };
 
 
-    const addTransaction = async () => {
+    const newTransaction = async () => {
         if (transactionType === "Transfer"){
             try{
             console.log(fromAccount, toAccount, transactionAmount);
             const {fromAccountData, toAccountData} = await transfer(fromAccount, toAccount, transactionAmount);
+            const transaction = addTransaction(transactionDate, transactionType, transactionAmount, note, fromAccount, toAccount, category, subcategory);
+            console.log(transaction);
             hideNewTransactionModal();
             openNotification('topRight', 
             `$${transactionAmount} has been transferred from ${fromAccountData.name} to ${toAccountData.name}.`);
@@ -196,7 +198,7 @@ const typeChange = (e) => {setTransactionType(e);
             <Input onChange={noteChange}/>
         </Form.Item>
         <Form.Item>
-        <Button onClick={addTransaction}>
+        <Button onClick={newTransaction}>
             Submit
         </Button>
         </Form.Item>

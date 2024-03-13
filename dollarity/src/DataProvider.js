@@ -104,9 +104,35 @@ const DataProvider = ({children}) => {
         //Refresh the account information.
         await getAccounts();
 
-        const fromName = fromAccountData.name;
-        const toName = toAccountData.name;
         return {fromAccountData, toAccountData};
+    }
+
+    const addTransaction = async (date, type, amount, note, sendingAccount = null, receivingAccount = null, category, subcategory = null) => {
+
+        if (type === 'Transfer') {
+            const {data, error} = await supabase
+            .from("transactions")
+            .insert([{
+                date: date, 
+                type: type, 
+                amount: amount, 
+                note: note, 
+                receiving_account_id: receivingAccount, 
+                sending_account_id: sendingAccount, 
+                category_id: category, 
+                subcategory_id: subcategory, 
+                user_id: user.id}]);
+            if (error) throw new Error(error.message);
+            return data;
+        }
+
+        else if (type === 'Expense'){
+            
+        }
+
+        else if (type === 'Income'){
+
+        }
     }
 
 
@@ -118,7 +144,8 @@ const DataProvider = ({children}) => {
             getAccounts,
             getTransactions,
             createAccount,
-            transfer
+            transfer,
+            addTransaction
             }}>
             {children}
         </DataContext.Provider>
