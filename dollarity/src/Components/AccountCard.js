@@ -14,27 +14,6 @@ const  AccountCard = ({account}) => {
     }
 
 
-    const items = [
-        {
-            label: 'Info',
-            key: '1',
-            icon: <InfoCircleOutlined />,
-          },
-        {
-          label: 'Edit',
-          key: '2',
-          icon: <EditOutlined />
-        },
-        {
-          label: 'Delete',
-          key: '3',
-          icon: <DeleteOutlined />,
-          danger: true,
-          onClick: () => handleDeleteClick()
-        },
-        
-    ];
-
     const handleDeleteClick = async () => {
         console.log('Delete');
         await deleteAccount(id);
@@ -60,7 +39,7 @@ const  AccountCard = ({account}) => {
                             <Popconfirm
                                 placement="bottomRight"
                                 icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-                                title="Deleting this account will also remove all related transactions."
+                                title="Deleting this account will remove all related transactions."
                                 onConfirm={() => handleDeleteClick(account)}
                                 okText="Yes"
                                 cancelText="No"

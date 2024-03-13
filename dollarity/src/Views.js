@@ -85,7 +85,7 @@ const Views = () => {
           <Popconfirm
           placement='bottomRight'
           title="Logout"
-          description="Are you sure to sign out?"
+          description="Are you sure you want to sign out?"
           onConfirm={handleLogout}
           onCancel={cancel}
           okText="Yes"
