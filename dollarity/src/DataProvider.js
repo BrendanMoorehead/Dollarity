@@ -29,11 +29,11 @@ const DataProvider = ({children}) => {
     const getAccounts = async () => {
         const {data, error} = await supabase
             .from('accounts')
-            .select('*')
+            .select('*').order('name')
             .eq('user_id', user.id);
         if (error) throw error;
         setAccounts(data);
-        console.log(data);
+        console.log("Accounts set: ", data);
         return data;
     }
 
@@ -125,16 +125,58 @@ const DataProvider = ({children}) => {
             if (error) throw new Error(error.message);
             return data;
         }
+        else {
+            const {data, error} = await supabase
+            .from("transactions")
+            .insert([{
+                date: date, 
+                type: type, 
+                amount: amount, 
+                note: note, 
+                receiving_account_id: receivingAccount, 
+                sending_account_id: sendingAccount, 
+                category_id: category, 
+                subcategory_id: subcategory, 
+                user_id: user.id}]);
+            if (error) throw new Error(error.message);
 
-        else if (type === 'Expense'){
-            
+            if (type === "Income"){
+                console.log("Income: " + receivingAccount);
+                const updateAccount = await changeAccountValue(receivingAccount, amount, "add");
+                const accountData = await getAccounts();
+                console.log(updateAccount);
+                return updateAccount;
+            }
+            else if (type === 'Expense'){
+                const updateAccount = await changeAccountValue(sendingAccount, amount, "subtract");
+                const accountData = await getAccounts();
+                return updateAccount ;
+            }
         }
 
-        else if (type === 'Income'){
-
-        }
     }
 
+    const changeAccountValue = async (accountId, amount, symbol) => {
+        const { data: accountData, error: accountError } = await supabase
+        .from('accounts')
+        .select('balance, name')
+        .eq('id', accountId)
+        .single();
+        if (accountError) throw new Error(accountError.message);
+        
+        
+        let newAccountBalance = parseFloat(accountData.balance);
+        symbol === 'add' ? newAccountBalance += parseFloat(amount) : newAccountBalance -= parseFloat(amount);
+
+        //Update balance of the account the funds are leaving from.
+        const {data: updatedAccountData, error: updatedAccountError} = await supabase
+            .from('accounts')
+            .update({balance: newAccountBalance})
+            .eq('id', accountId);
+        if (updatedAccountError) throw Error (updatedAccountError.message);
+
+        return accountData;
+    }
 
     return (
         <DataContext.Provider value={{

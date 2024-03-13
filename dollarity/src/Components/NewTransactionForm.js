@@ -8,15 +8,15 @@ import { DataContext } from './../DataProvider';
 import { createTransaction, fetchAccounts, fetchCategories } from '../accountFunctions';
 const NewTransactionForm = ({hideNewTransactionModal}) => {
     const { user, loading } = useContext(AuthContext);
-    const {transfer, addTransaction} = useContext(DataContext);
+    const {transfer, addTransaction, getAccounts} = useContext(DataContext);
     const [accounts, setAccounts] = useState([]);
     const [categories, setCategories] = useState([]);
 
     //Data Input
     const [transactionAmount, setTransactionAmount] = useState(0);
-    const [transactionType, setTransactionType] = useState('expense');
-    const [category, setCategory] = useState('');
-    const [subcategory, setSubcategory] = useState('');
+    const [transactionType, setTransactionType] = useState('Expense');
+    const [category, setCategory] = useState(null);
+    const [subcategory, setSubcategory] = useState(null);
     const [transactionDate, setTransactionDate] = useState(null);
     const [note, setNote] = useState(null);
     
@@ -59,7 +59,7 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
             try{
             console.log(fromAccount, toAccount, transactionAmount);
             const {fromAccountData, toAccountData} = await transfer(fromAccount, toAccount, transactionAmount);
-            const transaction = addTransaction(transactionDate, transactionType, transactionAmount, note, fromAccount, toAccount, category, subcategory);
+            const transaction = await addTransaction(transactionDate, transactionType, transactionAmount, note, fromAccount, toAccount, category, subcategory);
             console.log(transaction);
             hideNewTransactionModal();
             openNotification('topRight', 
@@ -69,24 +69,33 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
                 console.error(error);
             }
         }
-        else {
-        try{
-            // await createTransaction(
-            //     transactionDate, 
-            //     transactionType, 
-            //     transactionAmount,
-            //     note,
-            //     account,
-            //     category,
-            //     subcategory,
-            //     user.id
-            // );
-        } catch (error) {
-            console.error(error);
+        else if (transactionType === 'Income'){
+            try{
+                const transaction = await addTransaction(transactionDate, transactionType, transactionAmount, note, fromAccount, toAccount, category, subcategory);
+                console.log("Transaction Log: Income ", transaction);
+                
+                hideNewTransactionModal();
+                
+                openNotification('topRight', 
+                `Your income of $${transactionAmount} has been added to ${transaction.name}.`);
+                
+                } catch (error) {
+                    console.error(error);
+                }
         }
+        else if (transactionType === 'Expense'){
+            try{
+                const transaction = await addTransaction(transactionDate, transactionType, transactionAmount, note, fromAccount, toAccount, category, subcategory);
+                console.log(transaction);
+                
+                hideNewTransactionModal();
+                openNotification('topRight', 
+                `Your expense of $${transactionAmount} has been removed from ${transaction.name}.`);
+    
+                } catch (error) {
+                    console.error(error);
+                }
         }
-        // hideNewTransactionModal();
-        // openNotification('topRight');
         
     }
 
