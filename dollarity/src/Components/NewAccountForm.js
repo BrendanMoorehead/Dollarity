@@ -6,6 +6,7 @@ import NameInput from './NameInput';
 import { createAccount, fetchAccounts } from '../accountFunctions';
 import { useContext } from 'react';
 import { AuthContext } from './../AuthProvider';
+import { DataContext } from './../DataProvider';
 import { debounce } from 'lodash';
 /**
  * A form for the user to enter all account details.
@@ -19,32 +20,23 @@ const NewAccountForm = ({hideNewAccountModal}) => {
   const [accountType, setAccountType] = useState('Spending');
   const [formSubmitLoading, setFormSubmitLoading] = useState(false);
 
+  const { accounts, createAccount } = useContext(DataContext);
+
   const changeAccountType = (value) => setAccountType(value);
   const changeAccountBalance = (value) => setAccountBalance(value);
   const changeAccountName = (value) => setAccountName(value);
 
-  const waitForOneSecond = () => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(); // Resolve the promise after one second
-      }, 1000); // 1000 milliseconds = 1 second
-    });
-  };
-
   const formSubmit = async () => {
     setFormSubmitLoading(true);
     try {
-      const data = await createAccount(accountType, accountName, accountBalance, user.id);
+      const data = await createAccount(accountType, accountName, accountBalance);
+
     } catch (error) {
       console.log(error);
     }
     setFormSubmitLoading(false);
     hideNewAccountModal();
     openNotification('topRight');
-  }
-
-  const getAccounts = async () => {
-    fetchAccounts();
   }
 
   const [api, contextHolder] = notification.useNotification();

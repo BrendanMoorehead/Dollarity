@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import DollarInput from './DollarInput';
 import { useContext } from 'react';
 import { AuthContext } from './../AuthProvider';
+import { DataContext } from './../DataProvider';
 import { createTransaction, fetchAccounts, fetchCategories } from '../accountFunctions';
 const NewTransactionForm = ({hideNewTransactionModal}) => {
     const { user, loading } = useContext(AuthContext);
+    const {transfer} = useContext(DataContext);
     const [accounts, setAccounts] = useState([]);
     const [categories, setCategories] = useState([]);
 
@@ -17,7 +19,10 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
     const [subcategory, setSubcategory] = useState('');
     const [transactionDate, setTransactionDate] = useState(null);
     const [note, setNote] = useState(null);
-    const [account, setAccount] = useState();
+    
+    //Account IDs for the accounts sending and recieving funds. 
+    const [fromAccount, setFromAccount] = useState();
+    const [toAccount, setToAccount] = useState();
 
     useEffect(() => {
 
@@ -40,33 +45,47 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
     }, []);
 
     const [api, contextHolder] = notification.useNotification();
-    const openNotification = (placement) => {
+    const openNotification = (placement, desc) => {
         api.success({
         message: `Transaction added`,
-        description:
-        `${transactionAmount} has been deducted from ${account}.`,
+        description: desc,
         placement,
         });
     };
 
 
     const addTransaction = async () => {
+        if (transactionType === "Transfer"){
+            try{
+            console.log(fromAccount, toAccount, transactionAmount);
+            const {fromAccountData, toAccountData} = await transfer(fromAccount, toAccount, transactionAmount);
+            hideNewTransactionModal();
+            openNotification('topRight', 
+            `$${transactionAmount} has been transferred from ${fromAccountData.name} to ${toAccountData.name}.`);
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        else {
         try{
-            await createTransaction(
-                transactionDate, 
-                transactionType, 
-                transactionAmount,
-                note,
-                account,
-                category,
-                subcategory,
-                user.id
-            );
+            // await createTransaction(
+            //     transactionDate, 
+            //     transactionType, 
+            //     transactionAmount,
+            //     note,
+            //     account,
+            //     category,
+            //     subcategory,
+            //     user.id
+            // );
         } catch (error) {
             console.error(error);
         }
-        hideNewTransactionModal();
-        openNotification('topRight');
+        }
+        // hideNewTransactionModal();
+        // openNotification('topRight');
+        
     }
 
     const selectChange = (value) => { 
@@ -86,9 +105,13 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
         console.log(e.target.value);
         setNote(e.target.value);
     } 
-    const accountChange = (e) => {setAccount(e);
-         console.log(e);};
+    const setAccount = (value, transactionDirection) => {
+        transactionDirection === 'to' ? setToAccount(value) : setFromAccount(value);
+        console.log("Account #" + value + " is in " + transactionDirection);
+    }        
 
+const typeChange = (e) => {setTransactionType(e);
+                console.log(e);};
     
 
   return (
@@ -102,7 +125,7 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
             <Segmented 
             size="large" 
             options={["Expense", "Income", "Transfer"]}
-            onChange={accountChange}
+            onChange={typeChange}
             />
         </Form.Item>
         <Form.Item>
@@ -118,13 +141,19 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
         />
         </Form.Item>
         <Form.Item>
+        {transactionType !== "Income" ? <p>From:</p> : <p>To:</p>}
         <Select
             showSearch
             defaultValue="Account"
             style={{
             width: 200,
             }}
-            onChange={accountChange}
+            onChange={
+                (event) => {
+                    const direction = transactionType !== "Income" ? "from" : 'to';
+                    setAccount(event, direction);
+                }
+            }
             options={Object.keys(accounts).map(type => ({
                 label: <span>{type}</span>,
                 title: type.toLowerCase(),
@@ -136,6 +165,30 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
         }
         />
         </Form.Item>
+
+        {transactionType === 'Transfer' &&
+        <Form.Item>
+            <p>To:</p>
+        <Select
+            showSearch
+            defaultValue="Account"
+            style={{
+            width: 200,
+            }}
+            onChange={(event) => setAccount(event, 'to')}
+            options={Object.keys(accounts).map(type => ({
+                label: <span>{type}</span>,
+                title: type.toLowerCase(),
+                options: accounts[type].map(item => ({
+                label: <span>{item.name}</span>,
+                value: item.id.toString()
+                }))
+            }))
+        }
+        />
+        </Form.Item>
+        }
+
         <Form.Item >
             <DatePicker onChange={dateChange} />
         </Form.Item>

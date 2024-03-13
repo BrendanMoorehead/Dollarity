@@ -4,9 +4,10 @@ const NameInput = ({onChange}) => {
     const [name, setName] = useState("");
 
     const updateValue = (event) => {
-        setName(event.target.value);
+        const value = event.target.value;
+        setName(value);
 
-        onChange && onChange(name);
+        onChange && onChange(value);
     }
   return (
     <Form.Item

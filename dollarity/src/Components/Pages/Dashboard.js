@@ -31,7 +31,6 @@ const Dashboard = () => {
       <Button onClick={getNetworth}>Networth</Button>
       <Button onClick={fetchAccounts}>Accounts</Button>
       <AccountSection />
-      <AccountCard />
     </div>
   )
 }

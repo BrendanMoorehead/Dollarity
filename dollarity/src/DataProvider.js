@@ -53,13 +53,72 @@ const DataProvider = ({children}) => {
         return data;
     }
 
+    
+    const createAccount = async (type, name, balance) => {
+        const {data, error} = await supabase
+            .from('accounts')
+            .insert([{type: type, name: name, balance: balance, user_id: user.id}]);
+        if (error) {
+            console.error("Error creating account: " + error.message);
+        }
+        getAccounts();
+        return data;
+    }
+
+    const transfer = async (fromAccountId, toAccountId, transferAmount) => {
+
+        //Get required data about the account the funds are leaving from.
+        const { data: fromAccountData, error: fromAccountError } = await supabase
+            .from('accounts')
+            .select('balance, name')
+            .eq('id', fromAccountId)
+            .single();
+        if (fromAccountError) throw new Error(fromAccountError.message);
+        
+        //Get required data about the account the funds are being transferred to.
+        const { data: toAccountData, error: toAccountError } = await supabase
+            .from('accounts')
+            .select('balance, name')
+            .eq('id', toAccountId)
+            .single();
+        if (toAccountError) throw new Error(toAccountError.message);
+        
+        //Calculate new balances.
+        const newFromAccountBalance = parseFloat(fromAccountData.balance) - parseFloat(transferAmount);
+        const newToAccountBalance = parseFloat(toAccountData.balance) + parseFloat(transferAmount);
+
+        //Update balance of the account the funds are leaving from.
+        const {data: updatedFromAccountData, error: updatedFromAccountError} = await supabase
+            .from('accounts')
+            .update({balance: newFromAccountBalance})
+            .eq('id', fromAccountId);
+        if (updatedFromAccountError) throw Error (updatedFromAccountError.message);
+
+        //Update balance of the account the funds are leaving from.
+        const {data: updatedToAccountData, error: updatedToAccountError} = await supabase
+            .from('accounts')
+            .update({balance: newToAccountBalance})
+            .eq('id', toAccountId);
+        if (updatedToAccountError) throw Error (updatedToAccountError.message);
+
+        //Refresh the account information.
+        await getAccounts();
+
+        const fromName = fromAccountData.name;
+        const toName = toAccountData.name;
+        return {fromAccountData, toAccountData};
+    }
+
+
     return (
         <DataContext.Provider value={{
             networth, 
             accounts, 
             transactions,
             getAccounts,
-            getTransactions
+            getTransactions,
+            createAccount,
+            transfer
             }}>
             {children}
         </DataContext.Provider>

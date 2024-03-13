@@ -15,7 +15,7 @@ const DollarInput = ({onChange}) => {
         }
         //Call the onChange callback with the new value.
         onChange && onChange(value);
-    }, 100);
+    }, 10);
 
     //Update value on change.
     const handleChange = (event) => setValue(event.target.value);
