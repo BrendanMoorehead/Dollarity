@@ -9,6 +9,7 @@ import { DataContext } from './../../DataProvider';
 import { calculateNetWorth } from './../../accountFunctions';  
 import AccountSection from '../AccountSection';
 import AccountCard from '../AccountCard';
+import TransactionSection from '../TransactionSection';
 
 
 const Dashboard = () => {
@@ -31,6 +32,7 @@ const Dashboard = () => {
       <Button onClick={getNetworth}>Networth</Button>
       <Button onClick={fetchAccounts}>Accounts</Button>
       <AccountSection />
+      <TransactionSection />
     </div>
   )
 }

@@ -12,13 +12,11 @@ const DataProvider = ({children}) => {
     const { user } = useContext(AuthContext);
     const [networth, setNetworth] = useState(0);
     const [accounts, setAccounts] = useState(null);
-    const [transactions, setTransactions] = useState(null);
+    const [transactions, setTransactions] = useState();
 
     useEffect(() => {
-        const setData = async () => {
-
-        }
-    })
+        console.log("Transactions updated: ", transactions);
+    }, [transactions])
 
     /**
      * Gets the logged in user's accounts and sets them in the provider.
@@ -46,10 +44,11 @@ const DataProvider = ({children}) => {
     const getTransactions = async () => {
         const {data, error} = await supabase
             .from('transactions')
-            .select('*')
+            .select('*').order('date', {ascending: false})
             .eq('user_id', user.id);
         if (error) throw error;
         setTransactions(data);
+        
         return data;
     }
 

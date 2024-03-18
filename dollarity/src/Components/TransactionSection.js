@@ -1,24 +1,21 @@
 import React from 'react'
-
 import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from './../AuthProvider';
 import { DataContext } from './../DataProvider';
 import AccountCard from './AccountCard';
-import { Divider } from 'antd';
+import TransactionCard from './TransactionCard';
 
-const AccountSection = () => {
-    const { user } = useContext(AuthContext);
-    const { accounts, getAccounts } = useContext(DataContext);
+const TransactionSection = () => {
+    const { transactions, getTransactions } = useContext(DataContext);
     const [loading, setLoading] = useState(true);
-    const [loadedAccounts, setLoadedAccounts] = useState(null);
+    const [loadedTransactions, setLoadedTransactions] = useState(null);
 
     useEffect(() => {
         const getData = async () => {
             setLoading(true);
             try {
-                const data = await getAccounts();
-                console.log(data);
-                // setLoadedAccounts(data);
+                const data = await getTransactions();
+                console.log("TRANSFOUND:" , data);
+                setLoadedTransactions(data);
             } catch (error) {
                 console.error("Error fetching accounts", error);
             } finally {
@@ -31,13 +28,11 @@ const AccountSection = () => {
     if (loading) {
         return <div>Loading...</div>;
     }
-    
-    // Ensure accounts data is available and not null or undefined
-    if (!accounts) {
+
+    if (!transactions) {
         return <div>No accounts data available</div>;
     }
-    
-    // Render accounts data
+
     return (
         <div style={{backgroundColor: '#dbdbdb', 
         borderRadius: 10, 
@@ -50,16 +45,17 @@ const AccountSection = () => {
         }}>
             <h2 style={{
                 alignSelf: 'flex-start'
-            }}>Accounts</h2>
-            
+            }}>Transactions</h2>
 
-            {accounts.map((account) => (
-                <div key={account.id} style={{marginBottom: '20px'}}>
-                    <AccountCard key={account.id} account={account} />
+
+            {transactions.map((transaction) => (
+                
+                <div key={transaction.id} style={{marginBottom: '20px'}}>
+                    <TransactionCard key={transaction.id} transaction={transaction}/>
                 </div>
             ))}
         </div>
     );
 }
 
-export default AccountSection
+export default TransactionSection

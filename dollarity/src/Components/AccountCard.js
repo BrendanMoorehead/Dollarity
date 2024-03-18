@@ -76,7 +76,6 @@ const styles = {
         backgroundColor: 'white', 
         padding: 6, 
         borderRadius: 20, 
-        margin:20,
         width: '400px',
         display:'grid',
     },
