@@ -1,46 +1,70 @@
 import React from 'react'
+import useCategories from '../Hooks/useCategories'
+import {ArrowUpOutlined, ArrowDownOutlined, SwapOutlined} from '@ant-design/icons'
+import { Tooltip } from 'antd'
+function IconComponent({ icon: Icon }) {
+    return (
+        <div style={{borderRadius: 50, backgroundColor: '#424242', width: 30, height: 30, display:'flex', justifyContent: 'space-evenly'}}>
+            <Icon style={{color: '#ebebeb', fontSize: 20}}/>
+        </div>
+    )
+}
+
 
 const TransactionCard = ({transaction}) => {
-    const { id, created_at, date, type, amount, note, category, subcategory, user_id, sending_account_id, receiving_account_id } = transaction;
-  return (
-    <div>
-    <div style={styles.card}>
-        <div style={styles.flex}>
-                <div style={styles.accountDetails}>
-                <p style={styles.accountName}>{note}</p>
-                <p style={styles.accountType}>{date}</p>
-                </div>
+    const { id, created_at, date, type, amount, note, category_id, subcategory_id, user_id, sending_account_id, receiving_account_id } = transaction;
+    const {getSubcategoryNameById} = useCategories();
+    let icon;
+    if (!sending_account_id) icon = ArrowDownOutlined;
+    else if (!receiving_account_id) icon = ArrowUpOutlined;
+    else icon = SwapOutlined;
 
-                <div style={styles.accountBalance}>
-                
-                <p style={styles.balanceNumber}>${amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
-                <p style={styles.balanceHeader}>{type}</p>
-                </div>
+    const amountStyle = {
+        fontSize: '1.2rem',
+        fontWeight: 'bold',
+        margin: 0,
+        color: type === 'Income' ? '#8aff93' : '#ebebeb'
+    }
+
+  return (
+    <div style={styles.card}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+                <Tooltip placement="left" title={type}>
+                    <a>
+                    <IconComponent icon={icon} />
+                    </a>
+                </Tooltip>
+                {/* <p style={styles.balanceHeader}>{type}</p> */}
+            <div style={styles.accountDetails}>
+                <p style={styles.accountName}>{note ? note : getSubcategoryNameById(subcategory_id)}</p>
             </div>
+        </div>
+        <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+            <p style={amountStyle}>{type === 'Expense' ? '-' : null}${amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
         </div>
     </div>
   )
 }
 
 const styles = {
-    card: {
-        backgroundColor: 'white', 
-        padding: 6, 
-        borderRadius: 20, 
-        width: '400px',
-        display:'grid',
+    direction: {
+
     },
-    flex: {
-        display: 'flex',
-        padding: 20,
+    card: {
+        backgroundColor: '#1B1B1B', 
+        padding: '16px', 
+        borderRadius: 10, 
+        width: '400px',
+        display:'flex',
         justifyContent: 'space-between',
-        gap: '30px'
+        boxShadow: '6px 6px 6px -5px rgba(0,0,0,0.8)'
     },
     accountName: {
         fontSize: '1rem',
         fontWeight: 'bold',
         padding: 'none',
         margin: 0,
+        color: '#ebebeb',
         alignSelf: 'end' 
     },
     accountType: {
@@ -66,13 +90,7 @@ const styles = {
         color: '#8a8a8a',
         alignSelf: 'start'
     },
-    balanceNumber: {
-        fontSize: '1.2rem',
-        fontWeight: 'bold',
-        margin: 0,
-        alignSelf: 'end'
-
-    }
+    
 }
 
 export default TransactionCard

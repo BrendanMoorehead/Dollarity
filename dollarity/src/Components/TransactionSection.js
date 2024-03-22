@@ -3,8 +3,9 @@ import { useContext, useEffect, useState } from 'react';
 import { DataContext } from './../DataProvider';
 import AccountCard from './AccountCard';
 import TransactionCard from './TransactionCard';
-
+import useCategories from '../Hooks/useCategories';
 const TransactionSection = () => {
+    const {categoriesLoading, categoryList} = useCategories();
     const { transactions, getTransactions } = useContext(DataContext);
     const [loading, setLoading] = useState(true);
     const [loadedTransactions, setLoadedTransactions] = useState(null);
@@ -24,6 +25,10 @@ const TransactionSection = () => {
         }
         getData();
     }, []);
+    
+    if (categoryList){
+        console.log(categoryList);
+    }
 
     if (loading) {
         return <div>Loading...</div>;

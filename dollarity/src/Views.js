@@ -1,4 +1,4 @@
-import { Route, Routes, Navigate, Redirect } from 'react-router-dom';
+import { Route, Routes, Navigate, Redirect, Link, useNavigate } from 'react-router-dom';
 import { Button, Layout, Menu, Popconfirm, message, FloatButton, Tooltip, Modal} from 'antd';
 import LoginScreen from './Components/LoginScreen';
 import Dashboard from './Components/Pages/Dashboard';
@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { PlusOutlined, DatabaseFilled, CreditCardFilled } from '@ant-design/icons';
 import NewAccountForm from './Components/NewAccountForm';
 import NewTransactionForm from './Components/NewTransactionForm';
+import TransactionPage from './Components/Pages/TransactionPage';
 const items = new Array(15).fill(null).map((_, index) => ({
   key: index + 1,
   label: `nav ${index + 1}`,
@@ -17,12 +18,14 @@ const items = new Array(15).fill(null).map((_, index) => ({
 const { Header, Content, Sider } = Layout;
 
 const item = [
-  {key: 1, label: "Dashboard"}, 
-  {key: 2, label: "Transactions"},
-  {key: 3, label: "Accounts"},  
+  {key: '/dashboard', label: "Dashboard", path: '/dashboard'}, 
+  {key: '/transactions', label: "Transactions", path: '/transactions'},
+  {key: '/accounts', label: "Accounts", path: '/accounts'},  
 ];
 
+
 const PrivateRoute = ({children, ...rest }) => {
+  
   const { user, loading } = useContext(AuthContext);
   if (loading) {
     return <div>Loading...</div>;
@@ -33,9 +36,11 @@ const PrivateRoute = ({children, ...rest }) => {
 };
 
 const Views = () => {
+  const navigate = useNavigate();
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [newAccountModal, setNewAccountModal] = useState(false);
   const [newTransactionModal, setNewTransactionModal] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState(['1']);
   const { login, logout, user, loading } = useContext(AuthContext);
 
   const handleLogout = async () => {
@@ -43,6 +48,11 @@ const Views = () => {
     console.log("Signing out");
     await logout();
     setConfirmLoading(false);
+  };
+
+  const handleMenuClick = (e) => {
+    console.log("Menu clicked", e);
+    navigate(e.key); // Update selected key when a menu item is clicked
   };
 
   const showNewAccountModal = () => {
@@ -108,7 +118,12 @@ const Views = () => {
             defaultOpenKeys={['sub1']}
             style={{ height: '100%', borderRight: 0 }}
             items={item}
-          />
+            onClick={handleMenuClick}
+          >{item.map(menuItem => (
+            <Menu.Item key={menuItem.key}>
+              <Link to={menuItem.path}>{menuItem.label}</Link>
+            </Menu.Item>
+          ))} </Menu>
         </Sider>) : (<></>)}
         <Layout>
       <Content>
@@ -123,6 +138,7 @@ const Views = () => {
       <Routes>
           <Route path='' element={<LoginScreen />} />
           <Route path='/dashboard' element={<PrivateRoute> <Dashboard /> </PrivateRoute>} />
+          <Route path='/transactions' element={<PrivateRoute> <TransactionPage /> </PrivateRoute>} />
           {/* Nonexistent Routes */}
           <Route path="*" element={<div>404 not found</div>} />
       </Routes>

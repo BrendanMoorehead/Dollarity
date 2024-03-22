@@ -10,12 +10,13 @@ import { calculateNetWorth } from './../../accountFunctions';
 import AccountSection from '../AccountSection';
 import AccountCard from '../AccountCard';
 import TransactionSection from '../TransactionSection';
+import useCategories from '../../Hooks/useCategories';
 
 
 const Dashboard = () => {
   const { user, loading } = useContext(AuthContext);
   const { accounts, getAccounts } = useContext(DataContext);
-
+  const {categoryList} = useCategories();
 
   const getNetworth = async () => {
     const nw = await calculateNetWorth(user.id);
@@ -28,9 +29,6 @@ const Dashboard = () => {
 
   return (
     <div>
-      Dashboard
-      <Button onClick={getNetworth}>Networth</Button>
-      <Button onClick={fetchAccounts}>Accounts</Button>
       <AccountSection />
       <TransactionSection />
     </div>

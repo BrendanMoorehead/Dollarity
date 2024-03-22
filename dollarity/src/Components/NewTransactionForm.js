@@ -3,6 +3,7 @@ import { Form, Input, InputNumber, Segmented, Select, DatePicker, Cascader, Butt
 import { useEffect, useState } from 'react';
 import DollarInput from './DollarInput';
 import { useContext } from 'react';
+import useCategories from '../Hooks/useCategories';
 import { AuthContext } from './../AuthProvider';
 import { DataContext } from './../DataProvider';
 import { createTransaction, fetchAccounts, fetchCategories } from '../accountFunctions';
@@ -11,7 +12,7 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
     const {transfer, addTransaction, getAccounts} = useContext(DataContext);
     const [accounts, setAccounts] = useState([]);
     const [categories, setCategories] = useState([]);
-
+    const {categoryList, getSupercategoryId} = useCategories();
     //Data Input
     const [transactionAmount, setTransactionAmount] = useState(0);
     const [transactionType, setTransactionType] = useState('Expense');
@@ -37,8 +38,8 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
                 acc[item.type].push(item);
                 return acc;
               }, {}));
-            const categories = await fetchCategories();
-            setCategories(categories);
+            const categories = localStorage.getItem('categories');
+            setCategories(JSON.parse(categories));
         };
 
         getData();
@@ -101,8 +102,10 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
 
     const selectChange = (value) => { 
         console.log(value);
-        setCategory(value[0]);
-        setSubcategory(value[1]);
+        const [subcategoryId, categoryId] = value.split('_'); 
+        console.log(categoryId);
+        setCategory(categoryId);
+        setSubcategory(subcategoryId);
     }
 
     const dateChange = (date, dateString) => {
@@ -148,7 +151,14 @@ const typeChange = (e) => {setTransactionType(e);
             width: 200,
             }}
             onChange={selectChange}
-            options={categories}
+            options={categories.map(category => ({
+                label: category.category,
+                title: category.category,
+                options: category.subcategories.map(subcategory => ({
+                  label: subcategory.category,
+                  value: `${subcategory.id}_${category.id}`,
+                }))
+              }))}
         />
         </Form.Item>
         <Form.Item>
