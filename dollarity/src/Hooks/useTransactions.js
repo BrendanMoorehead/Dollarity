@@ -6,7 +6,7 @@ import { AuthContext } from './AuthProvider';
 function useTransactions() {
     const { user } = useContext(AuthContext);
     const [transactionList, setTransactionList] = useState([]);
-    const [transactionsLoading, setTransactionsLoading] = useState([]);
+    const [transactionsLoading, setTransactionsLoading] = useState(true);
 
     useEffect(() => {
         const cachedTransactions = localStorage.getItem('transactions');
@@ -29,5 +29,10 @@ function useTransactions() {
         }
     }, []);
 
-    return {transactionsLoading, transactionList}
+    const transactionToTable = () => {
+        console.log(transactionList);
+    }
+
+    return {transactionsLoading, transactionList, transactionToTable}
 }
+export default useTransactions;
