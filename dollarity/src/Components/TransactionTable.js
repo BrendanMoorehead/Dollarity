@@ -1,7 +1,10 @@
 import React from 'react'
 import { Divider, Radio, Table } from 'antd';
-import useTransactions 
+import useDisplayTransaction from '../Hooks/useDisplayTransaction';
+import useFetchTransactions from '../Hooks/useFetchTransactions';
 const TransactionTable = () => {
+
+    const {displayTransaction, isLoading, error} = useDisplayTransaction();
 
     const columns = [
         {
@@ -19,7 +22,7 @@ const TransactionTable = () => {
         },
         {
             title: 'Category',
-            dataIndex: 'category',
+            dataIndex: 'category_id',
         },
         {
             title: 'Type',
@@ -36,16 +39,13 @@ const TransactionTable = () => {
         
     ]
 
-    const data = [ {
-
-    }]
-
+ 
   return (
     <div>
         <Table
-        
+        loading={isLoading}
         columns={columns}
-        dataSource={data}
+        dataSource={displayTransaction}
       />
     </div>
   )
