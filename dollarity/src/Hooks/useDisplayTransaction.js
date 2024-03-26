@@ -24,7 +24,8 @@ export default function useDisplayTransaction() {
                 const transactionsWithAccountNames = transactions.map(transaction => ({
                     ...transaction,
                     sending_account: accountLookup[transaction.sending_account_id],
-                    receiving_account: accountLookup[transaction.receiving_account_id]
+                    receiving_account: accountLookup[transaction.receiving_account_id],
+                    key: transaction.id
                 }));
                 setDisplayTransaction(transactionsWithAccountNames);
                 console.log(transactionsWithAccountNames);
