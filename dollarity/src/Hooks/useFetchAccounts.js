@@ -11,18 +11,24 @@ export default function useFetchAccounts() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
-            if (!user) return;
-            setIsLoading(true);
-            const {data, error} = await supabase
-                .from('accounts')
-                .select('*').order('name')
-                .eq('user_id', user.id);
-            if (error) setError("Something went wrong");
-            setAccounts(data);
-            setIsLoading(false);
+        const cachedAccounts = localStorage.getItem('accounts');
+        if (cachedAccounts) {
+            setAccounts(JSON.parse(cachedAccounts));
+        } else {
+            const fetchData = async () => {
+                if (!user) return;
+                setIsLoading(true);
+                const {data, error} = await supabase
+                    .from('accounts')
+                    .select('*').order('name')
+                    .eq('user_id', user.id);
+                if (error) setError("Something went wrong");
+                setAccounts(data);
+                localStorage.setItem('accounts', JSON.stringify(data));
+                setIsLoading(false);
+            }
+            fetchData();
         }
-        fetchData();
     }, [user]);
     return {accounts, isLoading, error}
 }
