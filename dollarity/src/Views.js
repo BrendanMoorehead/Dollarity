@@ -1,20 +1,17 @@
-import { Route, Routes, Navigate, Redirect, Link, useNavigate } from 'react-router-dom';
+import { Route, Routes, Navigate, Redirect, Link, useNavigate, Outlet } from 'react-router-dom';
 import { Button, Layout, Menu, Popconfirm, message, FloatButton, Tooltip, Modal} from 'antd';
 import LoginScreen from './Components/LoginScreen';
 import Dashboard from './Components/Pages/Dashboard';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from './AuthProvider';
-import { DataContext } from './DataProvider';
 import { useState } from 'react';
 import { PlusOutlined, DatabaseFilled, CreditCardFilled } from '@ant-design/icons';
 import NewAccountForm from './Components/NewAccountForm';
 import NewTransactionForm from './Components/NewTransactionForm';
 import TransactionPage from './Components/Pages/TransactionPage';
 import useFetchAccounts from './Hooks/useFetchAccounts';
-const items = new Array(15).fill(null).map((_, index) => ({
-  key: index + 1,
-  label: `nav ${index + 1}`,
-}));
+import AccountPage from './Components/Pages/AccountPage';
+
 
 const { Header, Content, Sider } = Layout;
 
@@ -49,12 +46,14 @@ const Views = () => {
       setAccountChildren(
         accounts.map((account) => {
           return {
-            key: account.id,
+            key: `/accounts/${account.id}`,
             label: account.name,
             path: `/accounts/${account.id}`
           }
         })
+        
       );
+
     }
   }, [isLoading, accounts, loading, user]);
 
@@ -163,6 +162,9 @@ const Views = () => {
           <Route path='' element={<LoginScreen />} />
           <Route path='/dashboard' element={<PrivateRoute> <Dashboard /> </PrivateRoute>} />
           <Route path='/transactions' element={<PrivateRoute> <TransactionPage /> </PrivateRoute>} />
+          <Route path='/accounts'>
+            <Route path={`:id`}   element={<PrivateRoute><AccountPage /> </PrivateRoute>} />
+          </Route>
           {/* Nonexistent Routes */}
           <Route path="*" element={<div>404 not found</div>} />
       </Routes>
