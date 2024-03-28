@@ -2,7 +2,7 @@ import { Route, Routes, Navigate, Redirect, Link, useNavigate } from 'react-rout
 import { Button, Layout, Menu, Popconfirm, message, FloatButton, Tooltip, Modal} from 'antd';
 import LoginScreen from './Components/LoginScreen';
 import Dashboard from './Components/Pages/Dashboard';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AuthContext } from './AuthProvider';
 import { DataContext } from './DataProvider';
 import { useState } from 'react';
@@ -10,6 +10,7 @@ import { PlusOutlined, DatabaseFilled, CreditCardFilled } from '@ant-design/icon
 import NewAccountForm from './Components/NewAccountForm';
 import NewTransactionForm from './Components/NewTransactionForm';
 import TransactionPage from './Components/Pages/TransactionPage';
+import useFetchAccounts from './Hooks/useFetchAccounts';
 const items = new Array(15).fill(null).map((_, index) => ({
   key: index + 1,
   label: `nav ${index + 1}`,
@@ -17,11 +18,7 @@ const items = new Array(15).fill(null).map((_, index) => ({
 
 const { Header, Content, Sider } = Layout;
 
-const item = [
-  {key: '/dashboard', label: "Dashboard", path: '/dashboard'}, 
-  {key: '/transactions', label: "Transactions", path: '/transactions'},
-  {key: '/accounts', label: "Accounts", path: '/accounts'},  
-];
+
 
 
 const PrivateRoute = ({children, ...rest }) => {
@@ -37,11 +34,38 @@ const PrivateRoute = ({children, ...rest }) => {
 
 const Views = () => {
   const navigate = useNavigate();
+  const { login, logout, user, loading } = useContext(AuthContext);
+  const {accounts, isLoading, error} = useFetchAccounts();
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [newAccountModal, setNewAccountModal] = useState(false);
   const [newTransactionModal, setNewTransactionModal] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState(['1']);
-  const { login, logout, user, loading } = useContext(AuthContext);
+  
+
+  const [accountChildren, setAccountChildren] = useState([]);
+
+  useEffect(() => {
+    if (!isLoading && !loading && accounts.length > 0){
+      setAccountChildren(
+        accounts.map((account) => {
+          return {
+            key: account.id,
+            label: account.name,
+            path: `/accounts/${account.id}`
+          }
+        })
+      );
+    }
+  }, [isLoading, accounts, loading, user]);
+
+  const item = [
+    {key: '/dashboard', label: "Dashboard", path: '/dashboard'}, 
+    {key: '/transactions', label: "Transactions", path: '/transactions'},
+    {key: '/accounts', label: "Accounts", path: '/accounts',
+      children: accountChildren
+  },  
+  ];
+
 
   const handleLogout = async () => {
     setConfirmLoading(true);
