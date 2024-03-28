@@ -7,7 +7,9 @@ import useCategories from '../Hooks/useCategories';
 import { AuthContext } from './../AuthProvider';
 import { DataContext } from './../DataProvider';
 import { createTransaction, fetchAccounts, fetchCategories } from '../accountFunctions';
+import useFetchTransactions from '../Hooks/useFetchTransactions';
 const NewTransactionForm = ({hideNewTransactionModal}) => {
+    const {transactions, isLoading, error, refetch} = useFetchTransactions();
     const { user, loading } = useContext(AuthContext);
     const {transfer, addTransaction, getAccounts} = useContext(DataContext);
     const [accounts, setAccounts] = useState([]);
@@ -97,7 +99,7 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
                     console.error(error);
                 }
         }
-        
+        refetch();
     }
 
     const selectChange = (value) => { 

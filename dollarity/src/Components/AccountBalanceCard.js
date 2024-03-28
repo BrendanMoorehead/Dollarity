@@ -3,6 +3,7 @@ import React from 'react'
 const AccountBalanceCard = ({balance}) => {
   return (
     <div style={styles.card}>
+        {/* Add conditional to make 0, maybe count up animation... */}
         <p style={styles.balanceAmount}>${balance.toFixed(2)}</p>
         <p style={styles.balanceText}>balance</p>
 

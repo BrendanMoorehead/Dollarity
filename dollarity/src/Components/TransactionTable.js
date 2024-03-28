@@ -11,6 +11,34 @@ const TransactionTable = () => {
     const {displayTransaction, isLoading, error, refetchData} = useDisplayTransaction();
     const {deleteTransactionsById} = useDeleteTransaction();
     const [selected, setSelected] = useState([]);
+    const [fromDate, setFromDate] = useState();
+    const [toDate, setToDate] = useState();
+    const [filteredData, setFilteredData] = useState();
+
+    const onRangeChange = (dates, dateStrings) => {
+      if (dates) {
+        console.log('From: ', dates[0], ', to: ', dates[1]);
+        console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+        const fromDate = new Date(dateStrings[0]);
+        const toDate = new Date(dateStrings[1]);
+        setFromDate(fromDate);
+        setToDate(toDate);
+
+
+      }
+    }
+
+    const handleDateFilter = (value, record) => {
+      const recordDate = new Date(value.date);
+      if (fromDate && toDate) {
+        return recordDate >= fromDate && recordDate <= toDate;
+      } else if (fromDate) {
+        return recordDate >= toDate;
+      } else if (toDate) {
+        return recordDate <= fromDate;
+      }
+      return true;
+    }
 
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
@@ -45,7 +73,6 @@ const TransactionTable = () => {
                 const options = {year: 'numeric', month: 'long', day: 'numeric'};
                 return date.toLocaleDateString('en-US', options);
             },
-            
         },
         {
             title: 'Note',
@@ -99,7 +126,7 @@ const TransactionTable = () => {
         <Button onClick={deleteSelected}>
           Delete Selected
         </Button>
-        <RangePicker />
+        <RangePicker onChange={onRangeChange}/>
         <Table
         rowSelection={{
             type: 'checkbox',
