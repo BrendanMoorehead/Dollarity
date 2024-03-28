@@ -7,7 +7,9 @@ const AccountPage = () => {
    const {account, isLoading, error} = useFetchAccountById(id);
 
 
-  if (isLoading) return (<p>loading...</p>)
+  if (isLoading) return (<p>loading...</p>);
+  if (error) return (<p>error</p>);
+  if (!account) return(<p>no account</p>);
 
   return (
     <div>Account ID: {account.name}</div>
