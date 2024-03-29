@@ -33,6 +33,9 @@ const TransactionTable = () => {
         const toDate = new Date(dateStrings[1]);
         setFromDate(fromDate);
         setToDate(toDate);
+      } else {
+          setFromDate(null);
+          setToDate(null);
       }
     }
 
