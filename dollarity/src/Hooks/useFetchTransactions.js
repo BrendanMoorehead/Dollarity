@@ -5,7 +5,6 @@ import { AuthContext } from '../AuthProvider';
 
 export default function useFetchTransactions() {
     const { user } = useContext(AuthContext);
-
     const [transactions, setTransactions] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
