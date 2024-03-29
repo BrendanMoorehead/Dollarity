@@ -1,7 +1,7 @@
 import React from 'react'
-import { Divider, Radio, Table, Button, DatePicker } from 'antd';
+import { Divider, Radio, Table, Button, DatePicker, message } from 'antd';
 import useDisplayTransaction from '../Hooks/useDisplayTransaction';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useDeleteTransaction from '../Hooks/useDeleteTransaction';
 import useFetchTransactions from '../Hooks/useFetchTransactions';
 
@@ -9,26 +9,34 @@ const { RangePicker } = DatePicker;
 
 const TransactionTable = () => {
     const {displayTransaction, isLoading, error, refetchData} = useDisplayTransaction();
+    const [messageApi, contextHolder] = message.useMessage();
     const {deleteTransactionsById} = useDeleteTransaction();
     const [selected, setSelected] = useState([]);
     const [fromDate, setFromDate] = useState();
     const [toDate, setToDate] = useState();
     const [filteredData, setFilteredData] = useState();
+    const [tableLoading, setTableLoading] = useState(true);
+    
+    useEffect(() => {
+        console.log("Effect");
+        setTableLoading(true);
+        const filtered = displayTransaction.filter(handleDateFilter);
+        setFilteredData(filtered);
+        console.log(filtered);
+        setTableLoading(false);
+    }, [fromDate, toDate, displayTransaction]);
+
 
     const onRangeChange = (dates, dateStrings) => {
       if (dates) {
-        console.log('From: ', dates[0], ', to: ', dates[1]);
-        console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
         const fromDate = new Date(dateStrings[0]);
         const toDate = new Date(dateStrings[1]);
         setFromDate(fromDate);
         setToDate(toDate);
-
-
       }
     }
 
-    const handleDateFilter = (value, record) => {
+    const handleDateFilter = (value) => {
       const recordDate = new Date(value.date);
       if (fromDate && toDate) {
         return recordDate >= fromDate && recordDate <= toDate;
@@ -55,6 +63,10 @@ const TransactionTable = () => {
     const deleteSelected = async () => {
       try {
         console.log(selected);
+        messageApi.open({
+            type: 'error',
+            content: 'Transaction deleted',
+          });
         await deleteTransactionsById(selected);
         refetchData();
       } catch (error) {
@@ -132,9 +144,9 @@ const TransactionTable = () => {
             type: 'checkbox',
             ...rowSelection,
           }}
-        loading={isLoading}
+        loading={tableLoading}
         columns={columns}
-        dataSource={displayTransaction}
+        dataSource={filteredData}
       />
     </div>
   )

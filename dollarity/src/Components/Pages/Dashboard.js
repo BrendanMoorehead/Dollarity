@@ -11,6 +11,7 @@ import AccountSection from '../AccountSection';
 import AccountCard from '../AccountCard';
 import TransactionSection from '../TransactionSection';
 import useCategories from '../../Hooks/useCategories';
+import TestChart from '../TestChart';
 
 
 const Dashboard = () => {
@@ -31,6 +32,7 @@ const Dashboard = () => {
     <div>
       <AccountSection />
       <TransactionSection />
+      <TestChart />
     </div>
   )
 }

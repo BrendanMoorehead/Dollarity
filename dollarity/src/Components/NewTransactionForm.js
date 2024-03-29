@@ -66,7 +66,7 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
             console.log(transaction);
             hideNewTransactionModal();
             openNotification('topRight', 
-            `$${transactionAmount} has been transferred from ${fromAccountData.name} to ${toAccountData.name}.`);
+            `$${transactionAmount} transferred from ${fromAccountData.name} to ${toAccountData.name}.`);
 
             } catch (error) {
                 console.error(error);
@@ -80,7 +80,7 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
                 hideNewTransactionModal();
                 
                 openNotification('topRight', 
-                `Your income of $${transactionAmount} has been added to ${transaction.name}.`);
+                `Recieved $${transactionAmount} to ${transaction.name}.`);
                 
                 } catch (error) {
                     console.error(error);
@@ -93,7 +93,7 @@ const NewTransactionForm = ({hideNewTransactionModal}) => {
                 
                 hideNewTransactionModal();
                 openNotification('topRight', 
-                `Your expense of $${transactionAmount} has been removed from ${transaction.name}.`);
+                `Spent $${transactionAmount} from ${transaction.name}.`);
     
                 } catch (error) {
                     console.error(error);

@@ -3,6 +3,7 @@ import { supabase } from '../supabaseClient';
 import { useContext } from 'react';
 import { AuthContext } from '../AuthProvider';
 
+
 export default function useDeleteTransaction() {
     const { user } = useContext(AuthContext);
 
@@ -11,13 +12,13 @@ export default function useDeleteTransaction() {
 
     const deleteTransactionsById = async (transactionIds) => {
         setIsLoading(true);
-        const {error} = await supabase
+        const { error } = await supabase
             .from('transactions')
             .delete()
             .in('id', transactionIds)
             .eq('user_id', user.id)
         setIsLoading(false);
-        if (error) throw error;
+        if (error) setError(error);
     }
 
     return {deleteTransactionsById, isLoading, error};
