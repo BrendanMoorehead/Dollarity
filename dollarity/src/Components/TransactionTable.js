@@ -1,5 +1,6 @@
 import React from 'react'
 import { Divider, Radio, Table, Button, DatePicker, message, Tag } from 'antd';
+import { EditFilled } from '@ant-design/icons';
 import useDisplayTransaction from '../Hooks/useDisplayTransaction';
 import { useState, useEffect } from 'react';
 import useDeleteTransaction from '../Hooks/useDeleteTransaction';
@@ -18,13 +19,15 @@ const TransactionTable = () => {
     const [tableLoading, setTableLoading] = useState(true);
     
     useEffect(() => {
+      setTableLoading(true);
+      if (!isLoading){
         console.log("Effect");
-        setTableLoading(true);
         const filtered = displayTransaction.filter(handleDateFilter);
         setFilteredData(filtered);
-        console.log(filtered);
+        console.log("filtered: ", filtered);
         setTableLoading(false);
-    }, [fromDate, toDate, displayTransaction]);
+      }
+    }, [fromDate, toDate, displayTransaction, isLoading]);
 
 
     const onRangeChange = (dates, dateStrings) => {
@@ -128,16 +131,23 @@ const TransactionTable = () => {
             title: 'Sending Account',
             dataIndex: 'sending_account',
             render: (sendingAccount) => (
-                <Tag color={sendingAccount.color}>{sendingAccount.name}</Tag>
+                sendingAccount ? <Tag color={sendingAccount.color}>{sendingAccount.name}</Tag> : null
               ),
         },
         {
             title: 'Receiving Account',
             dataIndex: 'receiving_account',
             render: (receivingAccount) => (
-                <Tag color={receivingAccount.color}>{receivingAccount.name}</Tag>
+                receivingAccount ? <Tag color={receivingAccount.color}>{receivingAccount.name}</Tag> : null
               ),
         },
+        {
+          title: 'Edit',
+
+          render: () => (
+            <Button icon={<EditFilled />}/>
+          ),
+        }
 
     ]
 

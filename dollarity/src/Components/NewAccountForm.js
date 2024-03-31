@@ -28,7 +28,7 @@ const NewAccountForm = ({hideNewAccountModal}) => {
   const changeAccountName = (value) => setAccountName(value);
   const changeColor = (value) => {
     console.log(value.toHex());
-    setColor(value.toHex());
+    setColor("#" + value.toHex());
   }
   const formSubmit = async () => {
     setFormSubmitLoading(true);
