@@ -33,12 +33,12 @@ export default function useDisplayTransaction() {
                 const transactionsWithAccountNames = transactions.map(transaction => ({
                     ...transaction,
                     sending_account: {
-                        name: accountLookup[transaction.sending_account_id].name,
-                        color: accountLookup[transaction.sending_account_id].color 
+                        name: transaction.sending_account_id ? accountLookup[transaction.sending_account_id].name : null,
+                        color: transaction.sending_account_id ? accountLookup[transaction.sending_account_id].color : null
                     },
                     receiving_account: {
-                        name: accountLookup[transaction.receiving_account_id].name,
-                        color: accountLookup[transaction.receiving_account_id].color
+                        name: transaction.receiving_account_id ? accountLookup[transaction.receiving_account_id].name : null,
+                        color: transaction.receiving_account_id ? accountLookup[transaction.receiving_account_id].color : null
                     },
                     category_name: categoryLookup[transaction.subcategory_id],
                     key: transaction.id
