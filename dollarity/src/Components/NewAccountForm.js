@@ -19,17 +19,21 @@ const NewAccountForm = ({hideNewAccountModal}) => {
   const [accountBalance, setAccountBalance] = useState(0.00);
   const [accountType, setAccountType] = useState('Spending');
   const [formSubmitLoading, setFormSubmitLoading] = useState(false);
+  const [color, setColor] = useState();
 
   const { accounts, createAccount } = useContext(DataContext);
 
   const changeAccountType = (value) => setAccountType(value);
   const changeAccountBalance = (value) => setAccountBalance(value);
   const changeAccountName = (value) => setAccountName(value);
-
+  const changeColor = (value) => {
+    console.log(value.toHex());
+    setColor(value.toHex());
+  }
   const formSubmit = async () => {
     setFormSubmitLoading(true);
     try {
-      const data = await createAccount(accountType, accountName, accountBalance);
+      const data = await createAccount(accountType, accountName, accountBalance, color);
 
     } catch (error) {
       console.log(error);
@@ -69,6 +73,9 @@ const NewAccountForm = ({hideNewAccountModal}) => {
         <NameInput onChange={changeAccountName}/>
         <h4>Current Balance</h4>
         <DollarInput onChange={changeAccountBalance} />
+      </Form.Item>
+      <Form.Item>
+        <ColorPicker onChange={(value) => changeColor(value)} />
       </Form.Item>
         <Button loading={formSubmitLoading} type="primary" size="large" block onClick={formSubmit}>
             Create Account

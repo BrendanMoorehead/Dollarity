@@ -18,7 +18,8 @@ export default function useDisplayTransaction() {
             
             if(!transactionLoading && !accountLoading && !categoriesLoading){
                 const accountLookup = accounts.reduce((acc, account) => {
-                    acc[account.id] = account.name;
+                    acc[account.id] = { name: account.name, color: account.color };
+                    console.log(acc);
                     return acc;
                 }, {});
 
@@ -27,16 +28,23 @@ export default function useDisplayTransaction() {
                     return cat;
                 }, {});
                 
-
+                
+                
                 const transactionsWithAccountNames = transactions.map(transaction => ({
                     ...transaction,
-                    sending_account: accountLookup[transaction.sending_account_id],
-                    receiving_account: accountLookup[transaction.receiving_account_id],
+                    sending_account: {
+                        name: accountLookup[transaction.sending_account_id].name,
+                        color: accountLookup[transaction.sending_account_id].color 
+                    },
+                    receiving_account: {
+                        name: accountLookup[transaction.receiving_account_id].name,
+                        color: accountLookup[transaction.receiving_account_id].color
+                    },
                     category_name: categoryLookup[transaction.subcategory_id],
                     key: transaction.id
                 }));
+                console.log("Display:" + transactionsWithAccountNames);
                 setDisplayTransaction(transactionsWithAccountNames);
-                console.log(transactionsWithAccountNames);
                 setIsLoading(false);
             }
         }

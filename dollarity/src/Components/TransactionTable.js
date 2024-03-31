@@ -1,5 +1,5 @@
 import React from 'react'
-import { Divider, Radio, Table, Button, DatePicker, message } from 'antd';
+import { Divider, Radio, Table, Button, DatePicker, message, Tag } from 'antd';
 import useDisplayTransaction from '../Hooks/useDisplayTransaction';
 import { useState, useEffect } from 'react';
 import useDeleteTransaction from '../Hooks/useDeleteTransaction';
@@ -127,10 +127,16 @@ const TransactionTable = () => {
         {
             title: 'Sending Account',
             dataIndex: 'sending_account',
+            render: (sendingAccount) => (
+                <Tag color={sendingAccount.color}>{sendingAccount.name}</Tag>
+              ),
         },
         {
             title: 'Receiving Account',
             dataIndex: 'receiving_account',
+            render: (receivingAccount) => (
+                <Tag color={receivingAccount.color}>{receivingAccount.name}</Tag>
+              ),
         },
 
     ]

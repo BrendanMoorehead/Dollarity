@@ -53,10 +53,10 @@ const DataProvider = ({children}) => {
     }
 
     
-    const createAccount = async (type, name, balance) => {
+    const createAccount = async (type, name, balance, color) => {
         const {data, error} = await supabase
             .from('accounts')
-            .insert([{type: type, name: name, balance: balance, user_id: user.id}]);
+            .insert([{type: type, name: name, balance: balance, user_id: user.id, color: color}]);
         if (error) {
             console.error("Error creating account: " + error.message);
         }
