@@ -1,10 +1,14 @@
 import { Input } from "antd";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { debounce } from 'lodash';
 
 const DollarInput = ({onChange, startValue = '0.00'}) => {
     const [value, setValue] = useState(startValue);
 
+  useEffect(() => {
+    setValue(startValue.toFixed(2));
+  }, [startValue]);
+  
     //Remove non-numeric values and format to two decimal places.
     const handleInputChange = debounce((newValue) => {
         if (isNaN(newValue)) setValue(0.00);
