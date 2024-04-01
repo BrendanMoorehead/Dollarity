@@ -21,6 +21,12 @@ const TransactionTable = () => {
     const [transactionFormModal, setTransactionFormModal] = useState(false);
     const [transactionData, setTransactionData] = useState(null);
 
+    const renderDate = (text) => {
+      const date = new Date(text);
+      const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return utcDate.toLocaleDateString('en-US', options);
+  };
 
     useEffect(() => {
       setTableLoading(true);
@@ -105,11 +111,7 @@ const TransactionTable = () => {
             dataIndex: 'date',
             sorter: (a, b) => new Date(b.date) - new Date(a.date),
             defaultSortOrder: 'ascend',
-            render: (text) => {
-                const date = new Date(text);
-                const options = {year: 'numeric', month: 'long', day: 'numeric'};
-                return date.toLocaleDateString('en-US', options);
-            },
+            render: renderDate
         },
         {
             title: 'Note',
