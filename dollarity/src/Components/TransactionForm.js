@@ -3,10 +3,10 @@ import useUpdateAccountBalance from '../Hooks/useUpdateAccountBalance';
 import DollarInput from './DollarInput';
 import { Form, Segmented, Input, DatePicker, Button } from 'antd';
 import dayjs from 'dayjs';
-
+import useUpdateTransaction from '../Hooks/useUpdateTransaction';
 const TransactionForm = ({hideTransactionModal, operationType, initialFormData}) => {
     const [formData, setFormData] = useState(initialFormData);
-
+    const {updateLoading, updateTransaction} = useUpdateTransaction();
     const { accountBalanceLoading, reduceAccountBalance, increaseAccountBalance } = useUpdateAccountBalance();
     
     useEffect(() => {
@@ -26,11 +26,18 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
     
     const handleInputChange = (event) => {
         const {name, value} = event.target;
+        console.log(name, value);
         setFormData({
             ...formData,
             [name]: value
         });
         console.log(formData);
+    }
+    const handleNoteChange = (event) => {
+        setFormData({
+            ...formData,
+            note: event.target.value
+        });
     }
     const handleDateChange = (date, dateString) => {
         setFormData(prevState => ({
@@ -46,10 +53,14 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
     }
 
     const handleUpdate = () => {
-
+        try {
+            updateTransaction(formData);
+        } catch (error) {
+            console.error(error);
+        }
     }
     const handleCreate = () => {
-        
+
     }
 
 
@@ -91,7 +102,7 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
             initialValue={formData.note} 
          >
             <Input 
-                onChange={handleInputChange}
+                onChange={handleNoteChange}
                 size="large"
             />
         </Form.Item>
@@ -112,10 +123,10 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
         <Form.Item>
             {operationType === 'update' ?
                 (<Button
-                    onPress={handleUpdate}
+                    onClick={handleUpdate}
                 >Update Transaction</Button>)
                 : (<Button
-                    onPress={handleCreate}
+                    onClick={handleCreate}
                 >Add Transaction</Button>)
             }
         </Form.Item>
