@@ -1,19 +1,10 @@
 import { useEffect, useState } from 'react';
 import useUpdateAccountBalance from '../Hooks/useUpdateAccountBalance';
 import DollarInput from './DollarInput';
-import { Form, Segmented } from 'antd';
-const TransactionForm = ({hideTransactionModal, operationType, initialFormData}) => {
-    const [transactionAmount, setTransactionAmount] = useState(initialFormData.amount.toFixed(2) || '0.00');
-    const [transactionType, setTransactionType] = useState(initialFormData.type || "Expense");
-    const [transactionDate, setTransactionDate] = useState(initialFormData.date || null);
-    const [transactionNote, setTransactionNote] = useState(initialFormData.note || null);
-    //Category information
-    const [transactionCategoryId, setTransactionCategoryId] = useState(initialFormData.categoryId || null);
-    const [transactionSubcategoryId, setTransactionSubcategoryId] = useState(initialFormData.subcategoryId || null);
-    //Account information
-    const [sendingAccountId, setSendingAccountId] = useState(initialFormData.sendingAccountId || null);
-    const [receivingAccountId, setReceivingAccountId] = useState(initialFormData.receivingAccountId || null);
+import { Form, Segmented, Input, DatePicker, Button } from 'antd';
+import dayjs from 'dayjs';
 
+const TransactionForm = ({hideTransactionModal, operationType, initialFormData}) => {
     const [formData, setFormData] = useState(initialFormData);
 
     const { accountBalanceLoading, reduceAccountBalance, increaseAccountBalance } = useUpdateAccountBalance();
@@ -21,9 +12,18 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
     useEffect(() => {
         setFormData(initialFormData);
         console.log("Passed data: ", initialFormData);
-
+        console.log(initialFormData.date);
     }, [initialFormData]);
 
+    useEffect(() => {
+        setFormData(prevState => ({
+            ...prevState,
+            date: initialFormData.date
+        }));
+    }, [initialFormData.date]);
+
+    const dateFormat = 'YYYY-MM-DD';
+    
     const handleInputChange = (event) => {
         const {name, value} = event.target;
         setFormData({
@@ -32,6 +32,26 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
         });
         console.log(formData);
     }
+    const handleDateChange = (date, dateString) => {
+        setFormData(prevState => ({
+            ...prevState,
+            date: dateString
+        }));
+      };
+    const handleTypeChange = (event) =>{
+        setFormData({
+            ...formData,
+            type: event
+        });
+    }
+
+    const handleUpdate = () => {
+
+    }
+    const handleCreate = () => {
+        
+    }
+
 
   return (
     <Form
@@ -49,9 +69,9 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
         {/* Transaction Type */}
         <Form.Item>
             <Segmented 
-            size="large" 
+                size="large" 
                 options={["Expense", "Income", "Transfer"]}
-                onChange={handleInputChange}
+                onChange={handleTypeChange}
                 value={formData.type}
             />
         </Form.Item>
@@ -65,12 +85,39 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
             
         </Form.Item>
          {/* Transaction Notes */}
-         <Form.Item>
-
+         <Form.Item
+            label="Note"
+            name="note"
+            initialValue={formData.note} 
+         >
+            <Input 
+                onChange={handleInputChange}
+                size="large"
+            />
         </Form.Item>
         {/* Transaction Date */}
+        <Form.Item
+        label="Transaction Date"
+         name="date"
+         rules={[{ required: true, message: 'Please select a date!' }]}
+        >
+        <DatePicker 
+            onChange={handleDateChange}  
+            placeholder={formData.date}
+            // defaultValue={dayjs(formData.date, dateFormat)} 
+            format={dateFormat}
+            size="large" 
+        />
+        </Form.Item>
         <Form.Item>
-
+            {operationType === 'update' ?
+                (<Button
+                    onPress={handleUpdate}
+                >Update Transaction</Button>)
+                : (<Button
+                    onPress={handleCreate}
+                >Add Transaction</Button>)
+            }
         </Form.Item>
     </Form>
   )
