@@ -8,7 +8,7 @@ import { AuthContext } from './../AuthProvider';
 import { DataContext } from './../DataProvider';
 import { createTransaction, fetchAccounts, fetchCategories } from '../accountFunctions';
 import useFetchTransactions from '../Hooks/useFetchTransactions';
-const NewTransactionForm = ({hideNewTransactionModal, transactionData}) => {
+const NewTransactionForm = ({hideNewTransactionModal, passedTransactionData}) => {
     const {transactions, isLoading, error, refetch} = useFetchTransactions();
     const {transfer, addTransaction, getAccounts} = useContext(DataContext);
     const [accounts, setAccounts] = useState([]);
@@ -24,13 +24,13 @@ const NewTransactionForm = ({hideNewTransactionModal, transactionData}) => {
           date: null,
           transactionNote: null
         };
-        return { ...defaultTransactionData, ...transactionData };
+        return { ...defaultTransactionData, ...passedTransactionData };
       });
     
       useEffect(() => {
         // Update state when transactionData prop changes
-        setTransactionState(prevState => ({ ...prevState, ...transactionData }));
-      }, [transactionData]);
+        setTransactionState(prevState => ({ ...prevState, ...passedTransactionData }));
+      }, [passedTransactionData]);
     const { amount, type, cat, subcat, date, transactionNote } = transactionState;
     //Data Input
     const [transactionAmount, setTransactionAmount] = useState(amount);

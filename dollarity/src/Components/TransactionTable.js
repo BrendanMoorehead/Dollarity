@@ -33,17 +33,11 @@ const TransactionTable = () => {
       }
     }, [fromDate, toDate, displayTransaction, isLoading]);
 
-
-    useEffect(() => {
-      if (transactionData !== null) {
-        showTransactionFormModal();
-      }
-    }, [transactionData]);
-
     const showTransactionFormModal = () => {
       setTransactionFormModal(true);
     }
     const hideTransactionFormModal = () => {
+      setTransactionData(null);
       setTransactionFormModal(false);
     };
 
@@ -59,11 +53,12 @@ const TransactionTable = () => {
           setToDate(null);
       }
     }
-    const displayEditPopup = (id) => {
+    const displayEditPopup = async (id) => {
       console.log("Edit Clicked: " + id);
       const transaction = filteredData.find(item => item.id === id);
       setTransactionData(transaction);
-      console.log(transaction);
+      showTransactionFormModal();
+      console.log("EditTrans: ", transaction);
     }
 
     const handleDateFilter = (value) => {
@@ -191,11 +186,11 @@ const TransactionTable = () => {
         dataSource={filteredData}
       />
       <Modal open={transactionFormModal} footer={null} onCancel={hideTransactionFormModal}>
-        <NewTransactionForm hideTransactionFormModal={hideTransactionFormModal} transactionData={{
+        <NewTransactionForm hideTransactionFormModal={hideTransactionFormModal} passedTransactionData={{
           amount: transactionData?.amount,
           type: 'Income',
           cat: 'Income',
-          subcat: transactionData?.category_id,
+          subcat: `${transactionData?.subcategory_id}_${transactionData?.category_id}`,
           date: '2024-03-31',
           transactionNote: 'Transaction Note'
         }}/>
