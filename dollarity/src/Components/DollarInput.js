@@ -2,8 +2,8 @@ import { Input } from "antd";
 import { useState } from 'react';
 import { debounce } from 'lodash';
 
-const DollarInput = ({onChange}) => {
-    const [value, setValue] = useState("0.00");
+const DollarInput = ({onChange, startValue = '0.00'}) => {
+    const [value, setValue] = useState(startValue);
 
     //Remove non-numeric values and format to two decimal places.
     const handleInputChange = debounce((newValue) => {

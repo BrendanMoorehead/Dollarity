@@ -8,24 +8,43 @@ import { AuthContext } from './../AuthProvider';
 import { DataContext } from './../DataProvider';
 import { createTransaction, fetchAccounts, fetchCategories } from '../accountFunctions';
 import useFetchTransactions from '../Hooks/useFetchTransactions';
-const NewTransactionForm = ({hideNewTransactionModal}) => {
+const NewTransactionForm = ({hideNewTransactionModal, transactionData}) => {
     const {transactions, isLoading, error, refetch} = useFetchTransactions();
-    const { user, loading } = useContext(AuthContext);
     const {transfer, addTransaction, getAccounts} = useContext(DataContext);
     const [accounts, setAccounts] = useState([]);
     const [categories, setCategories] = useState([]);
     const {categoryList, getSupercategoryId} = useCategories();
+
+    const [transactionState, setTransactionState] = useState(() => {
+        const defaultTransactionData = {
+          amount: '0.00',
+          type: 'Expense',
+          cat: null,
+          subcat: null,
+          date: null,
+          transactionNote: null
+        };
+        return { ...defaultTransactionData, ...transactionData };
+      });
+    
+      useEffect(() => {
+        // Update state when transactionData prop changes
+        setTransactionState(prevState => ({ ...prevState, ...transactionData }));
+      }, [transactionData]);
+    const { amount, type, cat, subcat, date, transactionNote } = transactionState;
     //Data Input
-    const [transactionAmount, setTransactionAmount] = useState(0);
-    const [transactionType, setTransactionType] = useState('Expense');
-    const [category, setCategory] = useState(null);
-    const [subcategory, setSubcategory] = useState(null);
-    const [transactionDate, setTransactionDate] = useState(null);
-    const [note, setNote] = useState(null);
+    const [transactionAmount, setTransactionAmount] = useState(amount);
+    const [transactionType, setTransactionType] = useState(type);
+    const [category, setCategory] = useState(cat);
+    const [subcategory, setSubcategory] = useState(subcat);
+    const [transactionDate, setTransactionDate] = useState(date);
+    const [note, setNote] = useState(transactionNote);
     
     //Account IDs for the accounts sending and recieving funds. 
     const [fromAccount, setFromAccount] = useState();
     const [toAccount, setToAccount] = useState();
+
+    
 
     useEffect(() => {
 
@@ -134,7 +153,7 @@ const typeChange = (e) => {setTransactionType(e);
     <Form style={{maxWidth: 400, padding: 20}}>
         {contextHolder}
         <Form.Item>
-            <DollarInput onChange={amountChange}
+            <DollarInput onChange={amountChange} startValue={transactionAmount}
             />
         </Form.Item>
         <Form.Item>
@@ -142,6 +161,7 @@ const typeChange = (e) => {setTransactionType(e);
             size="large" 
             options={["Expense", "Income", "Transfer"]}
             onChange={typeChange}
+            value={transactionType}
             />
         </Form.Item>
         <Form.Item>

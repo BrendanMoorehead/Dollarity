@@ -1,10 +1,11 @@
 import React from 'react'
-import { Divider, Radio, Table, Button, DatePicker, message, Tag } from 'antd';
+import { Divider, Radio, Table, Button, DatePicker, message, Tag, Modal } from 'antd';
 import { EditFilled } from '@ant-design/icons';
 import useDisplayTransaction from '../Hooks/useDisplayTransaction';
 import { useState, useEffect } from 'react';
 import useDeleteTransaction from '../Hooks/useDeleteTransaction';
 import useFetchTransactions from '../Hooks/useFetchTransactions';
+import NewTransactionForm from './NewTransactionForm';
 
 const { RangePicker } = DatePicker;
 
@@ -17,7 +18,10 @@ const TransactionTable = () => {
     const [toDate, setToDate] = useState();
     const [filteredData, setFilteredData] = useState();
     const [tableLoading, setTableLoading] = useState(true);
-    
+    const [transactionFormModal, setTransactionFormModal] = useState(false);
+    const [transactionData, setTransactionData] = useState(null);
+
+
     useEffect(() => {
       setTableLoading(true);
       if (!isLoading){
@@ -30,6 +34,20 @@ const TransactionTable = () => {
     }, [fromDate, toDate, displayTransaction, isLoading]);
 
 
+    useEffect(() => {
+      if (transactionData !== null) {
+        showTransactionFormModal();
+      }
+    }, [transactionData]);
+
+    const showTransactionFormModal = () => {
+      setTransactionFormModal(true);
+    }
+    const hideTransactionFormModal = () => {
+      setTransactionFormModal(false);
+    };
+
+
     const onRangeChange = (dates, dateStrings) => {
       if (dates) {
         const fromDate = new Date(dateStrings[0]);
@@ -40,6 +58,12 @@ const TransactionTable = () => {
           setFromDate(null);
           setToDate(null);
       }
+    }
+    const displayEditPopup = (id) => {
+      console.log("Edit Clicked: " + id);
+      const transaction = filteredData.find(item => item.id === id);
+      setTransactionData(transaction);
+      console.log(transaction);
     }
 
     const handleDateFilter = (value) => {
@@ -143,9 +167,8 @@ const TransactionTable = () => {
         },
         {
           title: 'Edit',
-
-          render: () => (
-            <Button icon={<EditFilled />}/>
+          render: (_, transaction) => (
+            <Button icon={<EditFilled />} onClick={() => displayEditPopup(transaction.id)}/>
           ),
         }
 
@@ -167,6 +190,16 @@ const TransactionTable = () => {
         columns={columns}
         dataSource={filteredData}
       />
+      <Modal open={transactionFormModal} footer={null} onCancel={hideTransactionFormModal}>
+        <NewTransactionForm hideTransactionFormModal={hideTransactionFormModal} transactionData={{
+          amount: transactionData?.amount,
+          type: 'Income',
+          cat: 'Income',
+          subcat: transactionData?.category_id,
+          date: '2024-03-31',
+          transactionNote: 'Transaction Note'
+        }}/>
+      </Modal>
     </div>
   )
 }
