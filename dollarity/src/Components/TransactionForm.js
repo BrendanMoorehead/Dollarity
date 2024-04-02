@@ -53,7 +53,9 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
     const handleTypeChange = (event) =>{
         setFormData({
             ...formData,
-            type: event
+            type: event,
+            receiving_account_id: null,
+            sending_account_id: null
         });
     }
 
