@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import useUpdateAccountBalance from '../Hooks/useUpdateAccountBalance';
 import useCategories from '../Hooks/useCategories';
 import useFetchAccounts from '../Hooks/useFetchAccounts';
+import useCreateTransaction from '../Hooks/useCreateTransaction';
 import DollarInput from './DollarInput';
 import { Form, Segmented, Input, DatePicker, Button, Select } from 'antd';
 import dayjs from 'dayjs';
@@ -13,19 +14,10 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
     const { accountBalanceLoading, reduceAccountBalance, increaseAccountBalance } = useUpdateAccountBalance();
     const { categoriesLoading, categoryList, getSubcategoryNameById } = useCategories();
     const {accounts, accountsLoading, error} = useFetchAccounts();
+    const {createTransaction, createLoading, createError} = useCreateTransaction();
     useEffect(() => {
         setFormData(initialFormData);
-        console.log("Passed data: ", initialFormData);
-        console.log(initialFormData.date);
-        console.log(accounts);
     }, [initialFormData]);
-
-    useEffect(() => {
-        setFormData(prevState => ({
-            ...prevState,
-            date: initialFormData.date
-        }));
-    }, [initialFormData.date]);
 
     const dateFormat = 'YYYY-MM-DD';
     
@@ -67,7 +59,11 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
         }
     }
     const handleCreate = () => {
-
+        try {
+            createTransaction(formData);
+        } catch (error) {
+            console.error(error);
+        }
     }
     const selectChange = (value) => { 
         const [subcategoryId, categoryId] = value.split('_'); 
@@ -103,7 +99,7 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
             name="amount"
             rules={[{ required: true, message: 'Please enter the transaction amount' }]}
         >
-            <DollarInput onChange={handleInputChange} startValue={formData.amount}/>
+            <DollarInput onChange={handleInputChange} startValue={formData?.amount || 0}/>
         </Form.Item>
         {/* Transaction Type */}
         <Form.Item>
@@ -111,14 +107,14 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
                 size="large" 
                 options={["Expense", "Income", "Transfer"]}
                 onChange={handleTypeChange}
-                value={formData.type}
+                value={formData?.type || "Expense"}
             />
         </Form.Item>
         {/* Transaction Category */}
         <Form.Item
             label="Category"
             name="category"
-            initialValue={formData.category_name}
+            initialValue={formData?.category_name || null}
         >
         <Select
             size='large'
@@ -139,7 +135,7 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
         </Form.Item>
         {/* Transaction Accounts */}
         <Form.Item>
-        {formData.type !== "Income" ? <p>From:</p> : <p>To:</p>}
+        {formData?.type !== "Income" ? <p>From:</p> : <p>To:</p>}
         <AccountSelect accounts={accounts} 
               onChange={
                 (event) => {
@@ -150,7 +146,7 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
 
         />
         </Form.Item>
-        {formData.type === 'Transfer' &&
+        {formData?.type === 'Transfer' &&
         <Form.Item>
             <p>To:</p>
             <AccountSelect 
@@ -162,7 +158,7 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
          <Form.Item
             label="Note"
             name="note"
-            initialValue={formData.note} 
+            initialValue={formData?.note || null} 
          >
             <Input 
                 onChange={handleNoteChange}
@@ -177,7 +173,7 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
         >
         <DatePicker 
             onChange={handleDateChange}  
-            placeholder={formData.date}
+            placeholder={formData?.date || null}
             // defaultValue={dayjs(formData.date, dateFormat)} 
             format={dateFormat}
             size="large" 

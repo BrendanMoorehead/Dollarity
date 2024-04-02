@@ -130,7 +130,7 @@ const DataProvider = ({children}) => {
             .insert([{
                 date: date, 
                 type: type, 
-                amount: amount, 
+                amount: amount.toFixed(2), 
                 note: note, 
                 receiving_account_id: receivingAccount, 
                 sending_account_id: sendingAccount, 

@@ -7,7 +7,7 @@ import { AuthContext } from './AuthProvider';
 import { useState } from 'react';
 import { PlusOutlined, DatabaseFilled, CreditCardFilled } from '@ant-design/icons';
 import NewAccountForm from './Components/NewAccountForm';
-import NewTransactionForm from './Components/NewTransactionForm';
+import TransactionForm from './Components/TransactionForm';
 import TransactionPage from './Components/Pages/TransactionPage';
 import useFetchAccounts from './Hooks/useFetchAccounts';
 import AccountPage from './Components/Pages/AccountPage';
@@ -174,7 +174,7 @@ const Views = () => {
       </Modal>
 
       <Modal open={newTransactionModal} footer={null} onCancel={hideNewTransactionModal}>
-        <NewTransactionForm hideNewTransactionModal={hideNewTransactionModal}/>
+        <TransactionForm hideNewTransactionModal={hideNewTransactionModal}/>
       </Modal>
 
       </Content>
