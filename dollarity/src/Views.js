@@ -174,7 +174,9 @@ const Views = () => {
       </Modal>
 
       <Modal open={newTransactionModal} footer={null} onCancel={hideNewTransactionModal}>
-        <TransactionForm hideNewTransactionModal={hideNewTransactionModal}/>
+        <TransactionForm hideNewTransactionModal={hideNewTransactionModal} initialFormData={({
+          type: "Expense"
+        })}/>
       </Modal>
 
       </Content>

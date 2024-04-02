@@ -142,7 +142,7 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
         </Form.Item>
         {/* Transaction Accounts */}
         <Form.Item>
-        {formData?.type !== "Income" ? <p>From:</p> : <p>To:</p>}
+        {formData.type !== "Income" ? <p>From:</p> : <p>To:</p>}
         <AccountSelect accounts={accounts} 
               onChange={
                 (event) => {
