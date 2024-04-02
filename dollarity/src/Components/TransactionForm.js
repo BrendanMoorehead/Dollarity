@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import useUpdateAccountBalance from '../Hooks/useUpdateAccountBalance';
+import useCategories from '../Hooks/useCategories';
 import DollarInput from './DollarInput';
-import { Form, Segmented, Input, DatePicker, Button } from 'antd';
+import { Form, Segmented, Input, DatePicker, Button, Select } from 'antd';
 import dayjs from 'dayjs';
 import useUpdateTransaction from '../Hooks/useUpdateTransaction';
 const TransactionForm = ({hideTransactionModal, operationType, initialFormData}) => {
     const [formData, setFormData] = useState(initialFormData);
     const {updateLoading, updateTransaction} = useUpdateTransaction();
     const { accountBalanceLoading, reduceAccountBalance, increaseAccountBalance } = useUpdateAccountBalance();
-    
+    const { categoriesLoading, categoryList, getSubcategoryNameById } = useCategories();
     useEffect(() => {
         setFormData(initialFormData);
         console.log("Passed data: ", initialFormData);
@@ -62,6 +63,14 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
     const handleCreate = () => {
 
     }
+    const selectChange = (value) => { 
+        const [subcategoryId, categoryId] = value.split('_'); 
+        setFormData({
+            ...formData,
+            category_id: categoryId,
+            subcategory_id: subcategoryId
+        });
+    }
 
 
   return (
@@ -87,8 +96,27 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
             />
         </Form.Item>
         {/* Transaction Category */}
-        <Form.Item>
-
+        <Form.Item
+            label="Category"
+            name="category"
+            initialValue={formData.category_name}
+        >
+        <Select
+            size='large'
+            showSearch
+            style={{
+            width: 200,
+            }}
+            onChange={selectChange}
+            options={categoryList.map(category => ({
+                label: category.category,
+                title: category.category,
+                options: category.subcategories.map(subcategory => ({
+                  label: subcategory.category,
+                  value: `${subcategory.id}_${category.id}`,
+                }))
+              }))}
+        />
         </Form.Item>
         {/* Transaction Accounts */}
         <Form.Item>
