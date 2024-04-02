@@ -2,7 +2,7 @@ import { Select } from 'antd';
 
 const { Option, OptGroup } = Select;
 
-const AccountSelect = ({accounts, onChange}) => {
+const AccountSelect = ({defaultAccount, accounts, onChange}) => {
     const types = [...new Set(accounts.map(account => account.type))];
   // Grouping accounts by type
   const groupedAccounts = types.map(type => ({
@@ -18,11 +18,13 @@ const AccountSelect = ({accounts, onChange}) => {
 
   return (
     <Select
+
       showSearch
       style={{ width: 200 }}
       placeholder="Select an account"
       options={groupedAccounts}
       onChange={onChange}
+      defaultValue={defaultAccount.name}
     />
   );
 }

@@ -143,7 +143,8 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
         {/* Transaction Accounts */}
         <Form.Item>
         {formData.type !== "Income" ? <p>From:</p> : <p>To:</p>}
-        <AccountSelect accounts={accounts} 
+        <AccountSelect defaultAccount={formData.type !== "Income" ? formData.sending_account : formData.receiving_account}
+        accounts={accounts} 
               onChange={
                 (event) => {
                     const direction = formData.type !== "Income" ? "from" : 'to';
@@ -156,7 +157,8 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
         {formData?.type === 'Transfer' &&
         <Form.Item>
             <p>To:</p>
-            <AccountSelect 
+            <AccountSelect
+            defaultAccount={formData.receiving_account} 
             accounts={accounts} 
               onChange={(event) => setAccount(event, 'to')}
         />
