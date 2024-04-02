@@ -30,6 +30,13 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
         });
         console.log(formData);
     }
+    const handleAmountChange = (event) => {
+        const amount = parseFloat(event).toFixed(2);
+        setFormData({
+            ...formData,
+            amount: amount
+        });
+    }
     const handleNoteChange = (event) => {
         setFormData({
             ...formData,
@@ -99,7 +106,7 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
             name="amount"
             rules={[{ required: true, message: 'Please enter the transaction amount' }]}
         >
-            <DollarInput onChange={handleInputChange} startValue={formData?.amount || 0}/>
+            <DollarInput onChange={handleAmountChange} startValue={formData?.amount || 0}/>
         </Form.Item>
         {/* Transaction Type */}
         <Form.Item>
