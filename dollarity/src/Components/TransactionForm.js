@@ -1,19 +1,23 @@
 import { useEffect, useState } from 'react';
 import useUpdateAccountBalance from '../Hooks/useUpdateAccountBalance';
 import useCategories from '../Hooks/useCategories';
+import useFetchAccounts from '../Hooks/useFetchAccounts';
 import DollarInput from './DollarInput';
 import { Form, Segmented, Input, DatePicker, Button, Select } from 'antd';
 import dayjs from 'dayjs';
 import useUpdateTransaction from '../Hooks/useUpdateTransaction';
+import AccountSelect from './AccountSelect';
 const TransactionForm = ({hideTransactionModal, operationType, initialFormData}) => {
     const [formData, setFormData] = useState(initialFormData);
     const {updateLoading, updateTransaction} = useUpdateTransaction();
     const { accountBalanceLoading, reduceAccountBalance, increaseAccountBalance } = useUpdateAccountBalance();
     const { categoriesLoading, categoryList, getSubcategoryNameById } = useCategories();
+    const {accounts, accountsLoading, error} = useFetchAccounts();
     useEffect(() => {
         setFormData(initialFormData);
         console.log("Passed data: ", initialFormData);
         console.log(initialFormData.date);
+        console.log(accounts);
     }, [initialFormData]);
 
     useEffect(() => {
@@ -71,7 +75,20 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
             subcategory_id: subcategoryId
         });
     }
-
+    const setAccount = (value, transactionDirection) => {
+        console.log("Account #" + value + " is in " + transactionDirection);
+        if (transactionDirection === 'to') {
+            setFormData({
+                ...formData,
+                receiving_account_id: value
+            });
+        }else {
+            setFormData({
+                ...formData,
+                sending_account_id: value
+            });
+        }
+    }
 
   return (
     <Form
@@ -120,9 +137,25 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
         </Form.Item>
         {/* Transaction Accounts */}
         <Form.Item>
+        {formData.type !== "Income" ? <p>From:</p> : <p>To:</p>}
+        <AccountSelect accounts={accounts} 
+              onChange={
+                (event) => {
+                    const direction = formData.type !== "Income" ? "from" : 'to';
+                    setAccount(event, direction);
+                }
+            }
 
-            
+        />
         </Form.Item>
+        {formData.type === 'Transfer' &&
+        <Form.Item>
+            <p>To:</p>
+            <AccountSelect 
+            accounts={accounts} 
+              onChange={(event) => setAccount(event, 'to')}
+        />
+        </Form.Item>}
          {/* Transaction Notes */}
          <Form.Item
             label="Note"

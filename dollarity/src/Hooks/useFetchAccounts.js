@@ -30,5 +30,5 @@ export default function useFetchAccounts() {
             fetchData();
         }
     }, [user]);
-    return {accounts, isLoading, error}
+    return {accounts,  isLoading, error}
 }
