@@ -31,7 +31,7 @@ const Dashboard = () => {
   return (
     <div>
       <AccountSection />
-      <TransactionSection />
+      {/* <TransactionSection /> */}
       <TestChart />
     </div>
   )

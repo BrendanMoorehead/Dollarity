@@ -1,6 +1,6 @@
 import React from 'react'
-import { Table, Button, DatePicker, message, Tag, Modal } from 'antd';
-import { EditFilled } from '@ant-design/icons';
+import { Table, Button, DatePicker, message, Tag, Modal, Tooltip } from 'antd';
+import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import useDisplayTransaction from '../Hooks/useDisplayTransaction';
 import { useState, useEffect } from 'react';
 import useDeleteTransaction from '../Hooks/useDeleteTransaction';
@@ -161,9 +161,16 @@ const TransactionTable = () => {
               ),
         },
         {
-          title: 'Edit',
+          title: 'Actions',
           render: (_, transaction) => (
-            <Button icon={<EditFilled />} onClick={() => displayEditPopup(transaction.id)}/>
+            <div style={{display: 'flex', gap: '10px'}}>
+            <Tooltip title="Edit">
+              <Button icon={<EditOutlined />} onClick={() => displayEditPopup(transaction.id)}/>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <Button icon={<DeleteOutlined />} onClick={() => displayEditPopup(transaction.id)}/>
+            </Tooltip>
+            </div>
           ),
         }
 
@@ -172,10 +179,21 @@ const TransactionTable = () => {
  
   return (
     <div>
-        <Button onClick={deleteSelected}>
-          Delete Selected
-        </Button>
-        <RangePicker onChange={onRangeChange}/>
+        <div style={styles.functionSection}>
+          <div style={styles.filterWrapper}>
+            <RangePicker onChange={onRangeChange} size="large"/>
+          </div>
+          <div style={styles.filterWrapper}>
+            <div style={styles.buttonWrapper}>
+            <Button onClick={deleteSelected} size="large" danger>
+              Delete Selected
+            </Button>
+            <Button type="primary" size="large" icon={<PlusOutlined />}>
+              Add Transaction
+            </Button>
+            </div>
+          </div>
+        </div>
         <Table
         rowSelection={{
             type: 'checkbox',
@@ -199,5 +217,17 @@ const TransactionTable = () => {
     </div>
   )
 }
+
+const styles = ({
+  functionSection: {
+    display: 'flex',
+    paddingBottom: 20,
+    justifyContent: 'space-between',
+  },
+  buttonWrapper: {
+    display: 'flex',
+    gap: 10
+  }
+})
 
 export default TransactionTable
