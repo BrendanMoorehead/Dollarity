@@ -230,14 +230,6 @@ const TransactionTable = () => {
         dataSource={filteredData}
       />
       <Modal open={transactionFormModal} footer={null} onCancel={hideTransactionFormModal}>
-        {/* <NewTransactionForm hideTransactionFormModal={hideTransactionFormModal} passedTransactionData={{
-          amount: transactionData?.amount,
-          type: 'Income',
-          cat: 'Income',
-          subcat: `${transactionData?.subcategory_id}_${transactionData?.category_id}`,
-          date: '2024-03-31',
-          transactionNote: 'Transaction Note'
-        }}/> */}
         <TransactionForm hideTransactionFormModal={hideTransactionFormModal} operationType={"update"} initialFormData={transactionData}/>
       </Modal>
       <Modal open={newTransactionModal} footer={null} onCancel={hideNewTransactionModal}>
