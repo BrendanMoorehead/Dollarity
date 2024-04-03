@@ -24,7 +24,7 @@ const AccountSelect = ({defaultAccount, accounts, onChange}) => {
       placeholder="Select an account"
       options={groupedAccounts}
       onChange={onChange}
-      defaultValue={defaultAccount.name}
+      defaultValue={defaultAccount?.name}
     />
   );
 }

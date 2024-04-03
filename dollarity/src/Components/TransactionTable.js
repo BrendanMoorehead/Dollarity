@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Button, DatePicker, message, Tag, Modal, Tooltip } from 'antd';
+import { Table, Button, DatePicker, message, Tag, Modal, Tooltip, Popconfirm } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import useDisplayTransaction from '../Hooks/useDisplayTransaction';
 import { useState, useEffect } from 'react';
@@ -16,6 +16,7 @@ const TransactionTable = () => {
     const [toDate, setToDate] = useState();
     const [filteredData, setFilteredData] = useState();
     const [tableLoading, setTableLoading] = useState(true);
+    const [newTransactionModal, setNewTransactionModal] = useState(false);
     const [transactionFormModal, setTransactionFormModal] = useState(false);
     const [transactionData, setTransactionData] = useState(null);
 
@@ -43,6 +44,14 @@ const TransactionTable = () => {
     const hideTransactionFormModal = () => {
       setTransactionData(null);
       setTransactionFormModal(false);
+    };
+
+    const showNewTransactionModal = () => {
+      setNewTransactionModal(true);
+    }
+    const hideNewTransactionModal = () => {
+      setTransactionData(null);
+      setNewTransactionModal(false);
     };
 
 
@@ -97,6 +106,15 @@ const TransactionTable = () => {
             content: 'Transaction deleted',
           });
         await deleteTransactionsById(selected);
+        refetchData();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    const deleteSingle = async (transactionId) => {
+      try {
+        await deleteTransactionsById([transactionId]);
         refetchData();
       } catch (error) {
         console.error(error);
@@ -167,9 +185,17 @@ const TransactionTable = () => {
             <Tooltip title="Edit">
               <Button icon={<EditOutlined />} onClick={() => displayEditPopup(transaction.id)}/>
             </Tooltip>
-            <Tooltip title="Delete">
-              <Button icon={<DeleteOutlined />} onClick={() => displayEditPopup(transaction.id)}/>
-            </Tooltip>
+            <Popconfirm
+              placement="topRight"
+              title="Delete transaction"
+              description="Are you sure you want to delete?"
+              onConfirm={() => (deleteSingle(transaction.id))}
+              onCancel={() => (console.log("Hello"))}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button danger icon={<DeleteOutlined />} />
+            </Popconfirm>
             </div>
           ),
         }
@@ -188,7 +214,7 @@ const TransactionTable = () => {
             <Button onClick={deleteSelected} size="large" danger>
               Delete Selected
             </Button>
-            <Button type="primary" size="large" icon={<PlusOutlined />}>
+            <Button type="primary" size="large" icon={<PlusOutlined />} onClick={showNewTransactionModal}>
               Add Transaction
             </Button>
             </div>
@@ -213,6 +239,11 @@ const TransactionTable = () => {
           transactionNote: 'Transaction Note'
         }}/> */}
         <TransactionForm hideTransactionFormModal={hideTransactionFormModal} operationType={"update"} initialFormData={transactionData}/>
+      </Modal>
+      <Modal open={newTransactionModal} footer={null} onCancel={hideNewTransactionModal}>
+        <TransactionForm hideNewTransactionModal={hideNewTransactionModal} initialFormData={({
+          type: "Expense"
+        })}/>
       </Modal>
     </div>
   )

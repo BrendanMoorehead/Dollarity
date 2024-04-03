@@ -20,16 +20,6 @@ const TransactionForm = ({hideTransactionModal, operationType, initialFormData})
     }, [initialFormData]);
 
     const dateFormat = 'YYYY-MM-DD';
-    
-    const handleInputChange = (event) => {
-        const {name, value} = event.target;
-        console.log(name, value);
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-        console.log(formData);
-    }
     const handleAmountChange = (event) => {
         const amount = parseFloat(event).toFixed(2);
         setFormData({
