@@ -188,7 +188,7 @@ const TransactionTable = () => {
             <Popconfirm
               placement="topRight"
               title="Delete transaction"
-              description="Are you sure you want to delete?"
+              description={`Are you sure you want to delete?`}
               onConfirm={() => (deleteSingle(transaction.id))}
               onCancel={() => (console.log("Hello"))}
               okText="Yes"
@@ -211,9 +211,19 @@ const TransactionTable = () => {
           </div>
           <div style={styles.filterWrapper}>
             <div style={styles.buttonWrapper}>
-            <Button onClick={deleteSelected} size="large" danger>
+            <Popconfirm
+              placement="topRight"
+              title="Delete selected transactions"
+              description={`Are you sure you want to delete ${selected.length} transactions?`}
+              onConfirm={deleteSelected}
+              onCancel={() => (console.log("Hello"))}
+              okText="Yes"
+              cancelText="No"
+            >
+            <Button size="large" danger>
               Delete Selected
             </Button>
+            </Popconfirm>
             <Button type="primary" size="large" icon={<PlusOutlined />} onClick={showNewTransactionModal}>
               Add Transaction
             </Button>
