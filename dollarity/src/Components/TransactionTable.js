@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table, Button, DatePicker, message, Tag, Modal, Tooltip, Popconfirm } from 'antd';
-import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { EditFilled, DeleteFilled, PlusOutlined } from '@ant-design/icons';
 import useDisplayTransaction from '../Hooks/useDisplayTransaction';
 import { useState, useEffect } from 'react';
 import useDeleteTransaction from '../Hooks/useDeleteTransaction';
@@ -181,9 +181,9 @@ const TransactionTable = () => {
         {
           title: 'Actions',
           render: (_, transaction) => (
-            <div style={{display: 'flex', gap: '10px'}}>
+            <div style={{display: 'flex', gap: '10px', justifyContent: 'center'}}>
             <Tooltip title="Edit">
-              <Button icon={<EditOutlined />} onClick={() => displayEditPopup(transaction.id)}/>
+              <Button icon={<EditFilled />} onClick={() => displayEditPopup(transaction.id)}/>
             </Tooltip>
             <Popconfirm
               placement="topRight"
@@ -194,10 +194,11 @@ const TransactionTable = () => {
               okText="Yes"
               cancelText="No"
             >
-              <Button danger icon={<DeleteOutlined />} />
+              <Button danger icon={<DeleteFilled />} />
             </Popconfirm>
             </div>
           ),
+          align: 'center'
         }
 
     ]
@@ -238,6 +239,7 @@ const TransactionTable = () => {
         loading={tableLoading}
         columns={columns}
         dataSource={filteredData}
+        pagination={{pageSize: 10}}
       />
       <Modal open={transactionFormModal} footer={null} onCancel={hideTransactionFormModal}>
         <TransactionForm hideTransactionFormModal={hideTransactionFormModal} operationType={"update"} initialFormData={transactionData}/>

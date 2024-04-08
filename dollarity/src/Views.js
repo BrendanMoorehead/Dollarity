@@ -100,19 +100,10 @@ const Views = () => {
 
   return (
     
-    <Layout>
-      <Header style={{
-          display: 'flex',
-          alignItems: 'center',
-        }}>
+    <Layout style={{minHeight: '100vh'}}>
+      <Header style={{background: '#242424'}}>
       <Menu
-          theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={['2']}
-          style={{
-            flex: 1,
-            minWidth: 0,
-          }}
         />
         {user ? ( 
           <Popconfirm
@@ -134,12 +125,10 @@ const Views = () => {
       
       <Layout>
       {user ? (
-        <Sider width={200} height={600}>
+        <Sider width={200} style={{background: 'black'}}>
           <Menu
             mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            style={{ height: '100%', borderRight: 0 }}
+            defaultSelectedKeys={['/dashboard']}
             items={item}
             onClick={handleMenuClick}
           >{item.map(menuItem => (
