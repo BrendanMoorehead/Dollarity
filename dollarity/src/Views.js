@@ -6,7 +6,7 @@ import { useContext, useEffect } from 'react';
 import { AuthContext } from './AuthProvider';
 import { useState } from 'react';
 import { PlusOutlined, DatabaseFilled, CreditCardFilled } from '@ant-design/icons';
-import NewAccountForm from './Components/NewAccountForm';
+import NewAccountForm from './Components/AccountForm';
 import TransactionForm from './Components/TransactionForm';
 import TransactionPage from './Components/Pages/TransactionPage';
 import useFetchAccounts from './Hooks/useFetchAccounts';
@@ -82,7 +82,7 @@ const Views = () => {
     setNewAccountModal(true);
   }
   
-  const hideNewAccountModal = () => {
+  const hideAccountModal = () => {
     setNewAccountModal(false);
   };
 
@@ -158,8 +158,8 @@ const Views = () => {
           <Route path="*" element={<div>404 not found</div>} />
       </Routes>
 
-      <Modal open={newAccountModal} footer={null} onCancel={hideNewAccountModal}>
-        <NewAccountForm hideNewAccountModal={hideNewAccountModal}/>
+      <Modal title={"New Account"} open={newAccountModal} footer={null} onCancel={hideAccountModal}>
+        <NewAccountForm hideAccountModal={hideAccountModal}/>
       </Modal>
 
       <Modal open={newTransactionModal} footer={null} onCancel={hideNewTransactionModal}>

@@ -2,13 +2,13 @@ import { useState } from "react";
 import { supabase } from '../supabaseClient';
 import { useContext } from 'react';
 import { AuthContext } from '../AuthProvider';
-
-
+/**
+ * A hook to delete a single transaction from the database.
+ */
 export default function useDeleteTransaction() {
     const { user } = useContext(AuthContext);
 
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
 
     const deleteTransactionsById = async (transactionIds) => {
         setIsLoading(true);
@@ -18,8 +18,8 @@ export default function useDeleteTransaction() {
             .in('id', transactionIds)
             .eq('user_id', user.id)
         setIsLoading(false);
-        if (error) setError(error);
+        if (error) throw new Error(error.message);
     }
 
-    return {deleteTransactionsById, isLoading, error};
+    return { deleteTransactionsById, isLoading };
 }

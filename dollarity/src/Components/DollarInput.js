@@ -11,14 +11,11 @@ const DollarInput = ({onChange, startValue = 0}) => {
   
     //Remove non-numeric values and format to two decimal places.
     const handleInputChange = debounce((newValue) => {
-        if (isNaN(newValue)) setValue(0.00);
-        else{
-            const numericValue = newValue.toString().replace(/[^0-9.-]/g, '');
-            const formattedValue = parseFloat(numericValue).toFixed(2);
-            setValue(formattedValue);
-        }
+        const numericValue = newValue.toString().replace(/[^0-9.-]/g, '');
+        const formattedValue = isNaN(parseFloat(numericValue)) ? '0.00' : parseFloat(numericValue).toFixed(2);
+        setValue(formattedValue);
         //Call the onChange callback with the new value.
-        onChange && onChange(value);
+        onChange && onChange(numericValue);
     }, 10);
 
     //Update value on change.
@@ -28,7 +25,7 @@ const DollarInput = ({onChange, startValue = 0}) => {
 
   return (
     <Input 
-        style={{fontSize: '32px', width: 220, textAlign: 'center'}}
+        style={{fontSize: '52px', textAlign: 'right'}}
         formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
         parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
         value={value}

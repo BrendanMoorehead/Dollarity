@@ -2,7 +2,7 @@ import { Breadcrumb, Layout, Menu, theme, Button } from 'antd';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import React from 'react';
 import NewTransactionForm from '../NewTransactionForm';
-import NewAccountForm from '../NewAccountForm';
+import NewAccountForm from '../AccountForm';
 import { useContext } from 'react';
 import { AuthContext } from './../../AuthProvider';
 import { DataContext } from './../../DataProvider';

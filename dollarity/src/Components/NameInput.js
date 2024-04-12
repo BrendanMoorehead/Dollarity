@@ -15,9 +15,10 @@ const NameInput = ({onChange}) => {
         rules={[{ required: true, message: 'Please enter the name of your account.' }]}
     >
         <Input 
+            style={{fontSize:"36px"}}
             size="large"
-            required={true}
             onChange={updateValue}
+            placeholder="Account Name"
         />
     </Form.Item>
   )
