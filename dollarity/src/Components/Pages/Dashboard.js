@@ -13,7 +13,7 @@ import TransactionSection from '../TransactionSection';
 import useCategories from '../../Hooks/useCategories';
 import TestChart from '../TestChart';
 import LightTransactionTable from '../LightTransactionTable';
-
+import NetworthCard from '../NetworthCard';
 const Dashboard = () => {
   const { user, loading } = useContext(AuthContext);
   const { accounts, getAccounts } = useContext(DataContext);
@@ -31,7 +31,9 @@ const Dashboard = () => {
   return (
     <div style={styles.pageWrapper}>
       <div style={styles.upperContent}>
-      <div style={{...styles.placeholderBox, ...styles.netWorth}}>Net Worth</div>
+      <div style={{...styles.placeholderBox, ...styles.netWorth}}>
+        <NetworthCard />
+      </div>
       <div style={{...styles.placeholderBox, ...styles.spending}}>Spending</div>
       <div style={{...styles.placeholderBox, ...styles.spendingChart}}>Spending Chart</div>
       </div>

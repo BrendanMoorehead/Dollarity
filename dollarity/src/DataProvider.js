@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import { AuthContext } from './AuthProvider';
 
 export const DataContext = createContext();
+export const useDataContext = () => useContext(DataContext);
 
 const DataProvider = ({children}) => {
 
@@ -15,8 +16,8 @@ const DataProvider = ({children}) => {
     const [transactions, setTransactions] = useState();
 
     useEffect(() => {
-        console.log("Transactions updated: ", transactions);
-    }, [transactions])
+        fetchNetworth();
+    }, [])
 
     /**
      * Gets the logged in user's accounts and sets them in the provider.
@@ -184,6 +185,15 @@ const DataProvider = ({children}) => {
             .eq('id', accountId);
         if (error) throw new Error(error.message);
     }
+    const fetchNetworth = async () => {
+        const {data, error} = await supabase 
+            .from('accounts')
+            .select('SUM(balance) as networth')
+            .single();
+
+        if (error) console.log(error.message);
+        setNetworth(data);
+    }
 
     return (
         <DataContext.Provider value={{
@@ -195,7 +205,7 @@ const DataProvider = ({children}) => {
             createAccount,
             transfer,
             addTransaction,
-            deleteAccount
+            deleteAccount,
             }}>
             {children}
         </DataContext.Provider>
