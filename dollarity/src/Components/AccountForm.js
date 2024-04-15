@@ -4,7 +4,7 @@ import useCreateAccount from '../Hooks/useCreateAccount';
 import { DataContext } from '../DataProvider';
 import DollarInput from './DollarInput';
 import NameInput from './NameInput';
-
+import { accountAdded } from '../features/accounts/accountsSlice';
 /**
  * A form for the user to enter all account details.
  * 
@@ -35,6 +35,7 @@ const AccountForm = ({hideAccountModal}) => {
       if (values) {
         console.log(values);
         await createAccount(values);
+        
         hideAccountModal();
       }
     } catch (error) {
