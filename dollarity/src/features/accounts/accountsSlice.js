@@ -1,5 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const loadAccountsFromLocalStorage = () => {
+    try {
+        const serializedAccounts = localStorage.getItem('accounts');
+        if (serializedAccounts === null){
+            //TODO: Call fetch from DB
+        }
+        return JSON.parse(serializedAccounts);
+    } catch (error){
+        //TODO: Error msg
+    }
+}
+
 const initialState = {
     value: [],
     loading: false,
