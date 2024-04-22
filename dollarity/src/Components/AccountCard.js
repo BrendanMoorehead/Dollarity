@@ -63,7 +63,7 @@ const  AccountCard = ({account}) => {
 
             <div style={styles.accountBalance}>
             
-            <p style={styles.balanceNumber}>${account.balance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+            <p style={styles.balanceNumber}>${balance}</p>
             <p style={styles.balanceHeader}>balance</p>
             </div>
         </div>
@@ -73,7 +73,7 @@ const  AccountCard = ({account}) => {
 
 const styles = {
     card: {
-        backgroundColor: 'white', 
+        backgroundColor: '#dbdbdb', 
         padding: 6, 
         borderRadius: 20, 
         width: '400px',

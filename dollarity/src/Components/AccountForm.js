@@ -4,7 +4,8 @@ import useCreateAccount from '../Hooks/useCreateAccount';
 import { DataContext } from '../DataProvider';
 import DollarInput from './DollarInput';
 import NameInput from './NameInput';
-import { accountAdded } from '../features/accounts/accountsSlice';
+import { addNewAccount, fetchAccounts } from '../features/accounts/accountsSlice';
+import { useDispatch } from 'react-redux'
 /**
  * A form for the user to enter all account details.
  * 
@@ -12,7 +13,7 @@ import { accountAdded } from '../features/accounts/accountsSlice';
  */
 const AccountForm = ({hideAccountModal}) => {
   const [form] = Form.useForm();
-
+  const dispatch = useDispatch();
   const { createAccount } = useCreateAccount();
   //Form states
   const [name, setName] = useState("");
@@ -34,8 +35,8 @@ const AccountForm = ({hideAccountModal}) => {
       const values = await form.validateFields();
       if (values) {
         console.log(values);
-        await createAccount(values);
-        
+        //await createAccount(values);
+        await dispatch(addNewAccount(values)).unwrap();
         hideAccountModal();
       }
     } catch (error) {

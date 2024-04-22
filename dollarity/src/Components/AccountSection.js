@@ -1,44 +1,34 @@
 import React from 'react'
-
-import { useContext, useEffect, useState } from 'react';
+import { selectAllAccounts, fetchAccounts } from '../features/accounts/accountsSlice';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { AuthContext } from './../AuthProvider';
 import { DataContext } from './../DataProvider';
+import { useSelector, useDispatch } from 'react-redux'
 import AccountCard from './AccountCard';
 import { Divider } from 'antd';
 
 const AccountSection = () => {
     const { user } = useContext(AuthContext);
-    const { accounts, getAccounts } = useContext(DataContext);
     const [loading, setLoading] = useState(true);
     const [loadedAccounts, setLoadedAccounts] = useState(null);
 
-    useEffect(() => {
-        const getData = async () => {
-            setLoading(true);
-            try {
-                const data = await getAccounts();
-                console.log(data);
-                // setLoadedAccounts(data);
-            } catch (error) {
-                console.error("Error fetching accounts", error);
-            } finally {
-                setLoading(false);
-            }
-        }
-        getData();
-    }, []);
+    const dispatch = useDispatch();
+    const accounts = useSelector(selectAllAccounts);
+    const accountsStatus = useSelector(state => state.accounts.status);
+    const accountsError = useSelector(state => state.accounts.error);
+    
 
-    if (loading) {
+    useEffect(() => {
+        if (accountsStatus === 'idle'){
+            dispatch(fetchAccounts());
+        }
+    }, [accountsStatus, dispatch]);
+
+    if (accountsStatus === 'loading'){
         return <div>Loading...</div>;
     }
-    
-    // Ensure accounts data is available and not null or undefined
-    if (!accounts) {
-        return <div>No accounts data available</div>;
-    }
-    
-    // Render accounts data
-    return (
+    if (accountsStatus === 'succeeded'){
+        return(
         <div style={{backgroundColor: '#dbdbdb', 
         borderRadius: 10, 
         paddingLeft: '20px', 
@@ -59,7 +49,11 @@ const AccountSection = () => {
                 </div>
             ))}
         </div>
-    );
+        )
+    }
+    if (accountsStatus === 'failed'){
+        return <div>Failed to get accounts</div>
+    }
 }
 
 export default AccountSection

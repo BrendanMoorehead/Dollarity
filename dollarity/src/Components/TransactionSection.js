@@ -55,7 +55,7 @@ const TransactionSection = () => {
 
             {transactions.map((transaction) => (
                 
-                <div key={transaction.id} style={{marginBottom: '20px'}}>
+                <div key={transaction.id} style={{marginBottom: '20px',}}>
                     <TransactionCard key={transaction.id} transaction={transaction}/>
                 </div>
             ))}
