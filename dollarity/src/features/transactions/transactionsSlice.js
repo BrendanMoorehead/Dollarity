@@ -1,40 +1,43 @@
-// //Create slice is main function
-// import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-// import { useContext } from 'react';
-// import { AuthContext } from './AuthProvider';
-// import { supabase } from './supabaseClient';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getTransactionsFromDB } from "../../api/transactionFunctions";
 
-// export const getTransactionsAsync = createAsyncThunk(
-//     'transactions/getTransactionsAsync',
-//     async (userId) => {
-//         const {data, error} = await supabase
-//             .from('transactions')
-//             .select('*').order('date', {ascending: false})
-//             .eq('user_id', userId);
-//         if (error) return error;
-//         return data;
-//     }
-// )
+const initialState = {
+    transactions: [],
+    status: "idle",
+    error: null
+}
 
-// const initialState = {
-//     value: [],
-//     loading: false,
-//     error: null
-// }
+export const fetchTransactions = createAsyncThunk('transactions/fetchTransactions', async () => {
+    try {
+        const transactions = getTransactionsFromDB();
+        return transactions;
+    } catch (error) {
+        //TODO: Decide what to do with fetch error
+        console.error("Fetch transactions error: " + error);
+    }
+})
 
-// export const transactionsSlice = createSlice({
-//     name: 'transactions',
-//     initialState,
-//     reducers: {
-        
-//     },
-//     extraReducers: {
-//         [getTransactionsAsync.fulfilled]: (state, action) => {
-//             return action.payload.transactions;
-//         }
-//     }
-// })
+export const transactionsSlice = createSlice({
+    name: 'transactions',
+    initialState,
+    reducers: {
 
-// export const {} = transactionsSlice.actions;
-
-// export default transactionsSlice.reducer
+    },
+    extraReducers(builder) {
+        builder
+            .addCase(fetchTransactions.pending, (state, action) => {
+                state.status = 'loading'
+            })
+            .addCase(fetchTransactions.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.transactions = state.transactions.concat(action.payload);
+            })
+            .addCase(fetchTransactions.rejected, (state, action) => {
+                state.status = 'failed'
+                state.error = action.error.message;
+            })
+    }
+})
+export const { transactionAdded } = transactionsSlice.actions;
+export default transactionsSlice.reducer;
+export const selectAllTransactions = (state) => state.transactions.transactions;

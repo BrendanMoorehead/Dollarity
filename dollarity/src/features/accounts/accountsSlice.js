@@ -6,7 +6,7 @@ const initialState = {
     error: null
 }
 
-export const fetchAccounts = createAsyncThunk('accounts/fetchAccounts', async () =>{
+export const fetchAccounts = createAsyncThunk('accounts/fetchAccounts', async () => {
     try{
         const accounts = await getAccountsFromDB();
         return accounts;
@@ -19,6 +19,7 @@ export const fetchAccounts = createAsyncThunk('accounts/fetchAccounts', async ()
 export const addNewAccount = createAsyncThunk('accounts/addNewAccount', async newAccount => {
     try {
         const account = await addNewAccountToDB(newAccount);
+        console.log(account);
         return account;
     } catch (error) {
         console.error("Add account error: " + error);
@@ -43,8 +44,16 @@ export const accountsSlice = createSlice({
                 state.status = 'failed'
                 state.error = action.error.message;
             })
+            .addCase(addNewAccount.pending, (state, action) => {
+                state.status = 'loading'
+            })
             .addCase(addNewAccount.fulfilled, (state, action) => {
+                state.status = 'succeeded';
                 state.accounts.push(action.payload);
+            })
+            .addCase(addNewAccount.rejected, (state, action) => {
+                state.status = 'failed'
+                state.error = action.error.message;
             })
     }
 })

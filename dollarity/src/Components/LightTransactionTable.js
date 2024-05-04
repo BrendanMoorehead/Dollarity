@@ -6,7 +6,7 @@ import useDisplayTransaction from '../Hooks/useDisplayTransaction';
 import TransactionForm from './TransactionForm';
 const LightTransactionTable = () => {
     const {displayTransaction, isLoading, error, refetchData} = useDisplayTransaction();
-    const [filteredData, setFilteredData] = useState();
+    const [filteredData, setFilteredData] = useState([]);
     const {deleteTransactionsById} = useDeleteTransaction();
     const [transactionData, setTransactionData] = useState(null);
     const [transactionFormModal, setTransactionFormModal] = useState(false);
