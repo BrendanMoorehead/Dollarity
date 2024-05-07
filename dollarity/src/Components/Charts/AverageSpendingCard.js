@@ -1,14 +1,26 @@
 import React from 'react'
 import AverageSpendingChart from './AverageSpendingChart'
 import { Select, Space } from 'antd';
+import { useState } from 'react';
+const currDate = new Date();
+const currYear = currDate.getFullYear();
+const currMonth = currDate.getMonth();
+//Calculate previous month
+const lastMonth = (currMonth === 0) ? 11 : currMonth - 1;
+const lastYear = (lastMonth === 11) ? currYear - 1 : currYear; 
+
+const lastMonthLabel = new Date(lastYear, lastMonth).toLocaleString('default', {month: 'long'})
+
+const currentMonthLabel = currDate.toLocaleString('default', {month: 'long'});
+
 
 const selectData = [
     {
-        value: 'This Month',
+        value: currentMonthLabel,
         label: 'This Month'
     },
     {
-        value: 'Last Month',
+        value: lastMonthLabel,
         label: 'Last Month'
     },
     {
@@ -18,6 +30,24 @@ const selectData = [
 ]
 
 const AverageSpendingCard = () => {
+    const [line1, setLine1] = useState([currMonth, currYear]);
+    const [line2, setLine2] = useState([]);
+
+    const select1Change = (e) => {
+        console.log(e);
+        if (e === currentMonthLabel){
+            setLine1([currMonth, currYear]);
+        } else if (e === lastMonthLabel){
+            setLine1([lastMonth, lastYear]);
+        } else {
+            setLine1(['Average']);
+        }
+        console.log(line1);
+    }
+    const select2Change = () => {
+
+    }
+
   return (
     <div style={styles.card}>
         <div style={styles.headerWrapper}>
@@ -26,17 +56,19 @@ const AverageSpendingCard = () => {
                 <Select 
                 dropdownStyle={{ backgroundColor: 'green' }}
                 style={styles.firstSelect}
-                defaultValue={'This Month'}
+                defaultValue={currentMonthLabel}
                 options={selectData}
+                onChange={select1Change}
                 />
                 <Select 
                 style={{ width: 140}}
                 defaultValue={'Last Month'}
                 options={selectData}
+                onChange={select2Change}
                 />
             </div>
         </div>
-        <AverageSpendingChart />
+        <AverageSpendingChart line1={line1}/>
     </div>
   )
 }

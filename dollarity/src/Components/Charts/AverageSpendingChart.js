@@ -1,5 +1,8 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { selectAllTransactions, fetchTransactions } from '../../features/transactions/transactionsSlice';
 
 const tempData = [
     {
@@ -152,6 +155,17 @@ const tempData = [
 ];
 
 const AverageSpendingChart = () => {
+
+    const dispatch = useDispatch();
+    const transactions = useSelector(selectAllTransactions);
+    const transactionsStatus = useSelector(state => state.transactions.status);
+
+    useEffect(() => {
+        if (transactionsStatus === 'idle'){
+            dispatch(fetchTransactions);
+        }
+    }, [transactionsStatus, dispatch]);
+
   return (
 <ResponsiveContainer width="100%" height={340}>
         <LineChart
@@ -171,8 +185,10 @@ const AverageSpendingChart = () => {
             }}/>
           <Tooltip formatter={(d) => '$' + parseFloat(d).toFixed(2)}/>
           <Legend />
-          <Line type="monotone" dataKey="april" stroke="#009447" dot={false} strokeWidth={3}/>
-          <Line type="monotone" dataKey="may" stroke="#4ca0b5" dot={false} strokeWidth={3}/>
+            {(transactionsStatus === 'succeeded') &&
+            (
+                <Line type="monotone" dataKey="april" stroke="#009447" dot={false} strokeWidth={3}/>
+            )}
         </LineChart>
       </ResponsiveContainer>
   )
