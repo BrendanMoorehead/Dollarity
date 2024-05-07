@@ -43,10 +43,12 @@ const AccountSection = () => {
             }}>Accounts</h2>
             
 
-            {accounts.map((account) => (
-                <div key={account.id} style={{marginBottom: '20px'}}>
+            {accounts && accounts.map((account) => (
+               account && account.id ? (<div key={account.id} style={{marginBottom: '20px'}}>
                     <AccountCard key={account.id} account={account} />
-                </div>
+                </div>) : (
+                    <div>Loading...</div>
+                )
             ))}
         </div>
         )
