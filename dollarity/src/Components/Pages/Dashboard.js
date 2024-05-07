@@ -14,8 +14,7 @@ import useCategories from '../../Hooks/useCategories';
 import TestChart from '../TestChart';
 import LightTransactionTable from '../LightTransactionTable';
 import NetworthCard from '../NetworthCard';
-
-import AverageSpendingChart from '../Charts/AverageSpendingChart';
+import AverageSpendingCard from '../Charts/AverageSpendingCard';
 const Dashboard = () => {
   const { user, loading } = useContext(AuthContext);
   const { accounts, getAccounts } = useContext(DataContext);
@@ -37,7 +36,7 @@ const Dashboard = () => {
         <NetworthCard />
       </div>
       <div style={{...styles.placeholderBox, ...styles.spending}}>Spending</div>
-      <div style={{...styles.placeholderBox, ...styles.spendingChart}}><AverageSpendingChart /></div>
+      <div style={{...styles.placeholderBox, ...styles.spendingChart}}><AverageSpendingCard /></div>
       </div>
       <div style={styles.lowerContent}>
       <AccountSection />

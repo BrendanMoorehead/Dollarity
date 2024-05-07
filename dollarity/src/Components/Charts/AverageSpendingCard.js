@@ -3,6 +3,7 @@ import AverageSpendingChart from './AverageSpendingChart'
 const AverageSpendingCard = () => {
   return (
     <div style={styles.card}>
+        <p>Spending</p>
         <AverageSpendingChart />
     </div>
   )
@@ -10,7 +11,7 @@ const AverageSpendingCard = () => {
 
 const styles = ({
     card: {
-        backgroundColor: 'white',
+        margin: 30
     }
 })
 

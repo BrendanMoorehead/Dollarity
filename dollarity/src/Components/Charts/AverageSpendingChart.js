@@ -153,26 +153,26 @@ const tempData = [
 
 const AverageSpendingChart = () => {
   return (
-<ResponsiveContainer width="100%" height="100%">
+<ResponsiveContainer width="100%" height={340}>
         <LineChart
           width={500}
           height={300}
           data={tempData}
           margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
+            top: 30,
+            bottom: 30,
           }}
         >
         <defs>
         </defs>
           <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
+          <YAxis tickFormatter={(tick) => {
+            return `$${tick}`;
+            }}/>
+          <Tooltip formatter={(d) => '$' + parseFloat(d).toFixed(2)}/>
           <Legend />
-          <Line type="monotone" dataKey="april" stroke="#009447" dot={false}/>
-          <Line type="monotone" dataKey="may" stroke="#4ca0b5" dot={false}/>
+          <Line type="monotone" dataKey="april" stroke="#009447" dot={false} strokeWidth={3}/>
+          <Line type="monotone" dataKey="may" stroke="#4ca0b5" dot={false} strokeWidth={3}/>
         </LineChart>
       </ResponsiveContainer>
   )
