@@ -1,5 +1,5 @@
 import React from 'react'
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const tempData = [
     {
@@ -114,67 +114,66 @@ const tempData = [
     },
     {
         name: 23,
-        april: 231,
+        april: 241,
         may: 240
     },
     {
         name: 24,
-        april: 231,
+        april: 256,
         may: 240
     },
     {
         name: 25,
-        april: 231,
+        april: 330,
         may: 240
     },
     {
         name: 26,
-        april: 231,
+        april: 390,
         may: 240
     },
     {
         name: 27,
-        april: 231,
+        april: 415,
         may: 240
     },
     {
         name: 28,
-        april: 231,
-        may: 240
+        april: 960,
     },
     {
         name: 29,
-        april: 231,
-        may: 240
+        april: 1020,
     },
     {
         name: 30,
-        april: 231,
-        may: 240
+        april: 1300,
     },
 ];
 
 const AverageSpendingChart = () => {
   return (
 <ResponsiveContainer width="100%" height="100%">
-        <AreaChart
+        <LineChart
           width={500}
-          height={400}
+          height={300}
           data={tempData}
           margin={{
-            top: 10,
+            top: 5,
             right: 30,
-            left: 0,
-            bottom: 0,
+            left: 20,
+            bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+        <defs>
+        </defs>
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Area type="monotone" dataKey="april" stackId="1" stroke="#8884d8" fill="#8884d8" />
-          <Area type="monotone" dataKey="may" stackId="1" stroke="#82ca9d" fill="#82ca9d" />
-        </AreaChart>
+          <Legend />
+          <Line type="monotone" dataKey="april" stroke="#009447" dot={false}/>
+          <Line type="monotone" dataKey="may" stroke="#4ca0b5" dot={false}/>
+        </LineChart>
       </ResponsiveContainer>
   )
 }
